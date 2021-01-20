@@ -22,6 +22,7 @@ abstract class Character {
   public int currentHitPoints;
   // Armor Class.
   public int armorClass;
+  public int currentArmorClass;
   // Initiative.
   public int initiative;
   // Ability Scores.
@@ -49,6 +50,11 @@ abstract class Character {
   public boolean hasShieldEquiped = true;
   
   public boolean dodge = false;
+  public boolean canRun = true;
+
+  public String fightingStyle = "";
+  
+  public int numberOfActions = 1;
 
   // Inventory
   private ArrayList<String> equipment = new ArrayList<String>();
@@ -107,7 +113,7 @@ abstract class Character {
    * Returns the weaponst.
    */
   public String showWeapons() {
-    String weaponsAsString = "";
+    String weaponsAsString = "Here are " + name + "'s current weapons:\n";
     int listNumber = 1;
     for (int position = 0; position < equipment.size(); position++) {
       if ((position + 1) % 3 == 0) {
@@ -295,5 +301,39 @@ abstract class Character {
       roll += (((charisma - charisma % 2) - 10) / 2);
     }
     return roll;
+  }
+  
+  /////////////////////////////////////////////////////////////////////////////
+  public String getCharacterInfo() {
+    if (hasShield && hasShieldEquiped) {
+      return name + ":\n♥ HP: " + currentHitPoints + "\nØ AC: " + armorClass
+             + "\nØ Shield: +2\n"
+             +"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
+    }
+    return name + ":\n♥ HP: " + currentHitPoints + "\nØ AC: " + armorClass
+           + "\nØ Shield: Not equiped\n"
+          +"-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
+  }
+  
+  /////////////////////////////////////////////////////////////////////////////
+  public int makeAttackRoll(int attackRoll, String property1, String property2) {
+
+    if (property1.equals("Two-handed")) {
+      hasShieldEquiped = false;
+    } else if (property1.equals("Finesse")) {
+      return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
+             + proficiencyBonus;
+    }
+    if (property2.equals("Ranged")) {
+      if (fightingStyle.equals("Archery")) {
+        return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
+               + proficiencyBonus + 2;
+      } else {
+        return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
+               + proficiencyBonus;
+      }
+    }
+    return attackRoll + (((strength - strength % 2) - 10) / 2)
+           + proficiencyBonus;
   }
 }

@@ -1342,13 +1342,223 @@ public class ChultMap {
 
   public static String rollEncounter(int encounterRoll, int whichEncounter) {
     if (encounterRoll >= 16) {
-      if (map[playerPosition] [0] == 1) {
-        if (whichEncounter >= 0) {
-          return "Goblin";
+      // Beach encounters: ----------------------------------------------------
+      if (map [playerPosition] [0] == 0){
+        if (whichEncounter >= 1 && whichEncounter <= 7) {
+          return "Arrakocra";
+        } else if (whichEncounter == 8) {
+          return "Artus Cimber";
+        } else if (whichEncounter == 9 || whichEncounter == 10) {
+          return "Cache";
+        } else if (whichEncounter == 11 || whichEncounter == 12) {
+          return "Chwinga";
+        } else if (whichEncounter == 13 || whichEncounter == 14) {
+          return "Allosaurus";
+        } else if (whichEncounter == 15 || whichEncounter == 16) {
+          return "Dimetrodon";
+        } else if (whichEncounter >= 17 && whichEncounter <= 21) {
+          return "Plesiosaurus";
+        } else if (whichEncounter >= 22 && whichEncounter <= 28) {
+          return "Pteranodon";
+        } else if (whichEncounter >= 29 && whichEncounter <= 31) {
+          return "Quetzalcoatlus";
+        } else if (whichEncounter >= 32 && whichEncounter <= 37) {
+          return "Velociraptor";
+        } else if (whichEncounter >= 38 && whichEncounter <= 40) {
+          return "Red Dragon";
+        } else if (whichEncounter >= 41 && whichEncounter <= 42) {
+          return "Emerald Enclave";
+        } else if (whichEncounter >= 43 && whichEncounter <= 46) {
+          return "Explorer";
+        } else if (whichEncounter >= 47 && whichEncounter <= 49) {
+          return "Flaming Fist";
+        } else if (whichEncounter >= 50 && whichEncounter <= 52) {
+          return "Flying Monkey";
+        } else if (whichEncounter >= 53 && whichEncounter <= 55) {
+          return "Flying Snake";
+        } else if (whichEncounter >= 56 && whichEncounter <= 57) {
+          return "Frost Giant";
+        } else if (whichEncounter >= 58 && whichEncounter <= 63) {
+          return "Giant Lizard";
+        } else if (whichEncounter >= 64 && whichEncounter <= 67) {
+          return "Giant Snapping Turtle";
+        } else if (whichEncounter >= 68 && whichEncounter <= 71) {
+          return "Lizardfolk";
+        } else if (whichEncounter >= 72 && whichEncounter <= 74) {
+          return "Red Wizard";
+        } else if (whichEncounter >= 75 && whichEncounter <= 84) {
+          return "Sea hag";
+        } else if (whichEncounter >= 85 && whichEncounter <= 87) {
+          return "Stirge";
+        } else if (whichEncounter >= 88 && whichEncounter <= 89) {
+          return "Swarm of Bats";
+        } else if (whichEncounter >= 90 && whichEncounter <= 94) {
+          return "Tabaxi Hunter";
+        } else if (whichEncounter >= 95 && whichEncounter <= 100) {
+          return "Tri-flower Frond";
         }
+
+      // No undead enounters: -------------------------------------------------
+      } else if (map [playerPosition] [0] == 1){
+        if (whichEncounter == 1) {
+          return "Albino Dwarves";
+        } else if (whichEncounter == 2) {
+          return "Almiraj";
+        } else if (whichEncounter == 3 || whichEncounter == 4) {
+          return "Ape";
+        } else if (whichEncounter == 5) {
+          return "Artus Cimber";
+        } else if (whichEncounter == 6 || whichEncounter == 7) {
+          return "Assassin Vine";
+        } else if (whichEncounter == 8) {
+          return "Axe Beak";
+        } else if (whichEncounter == 9) {
+          return "Baboon";
+        } else if (whichEncounter == 10 || whichEncounter == 11) {
+          return "Cache";
+        } else if (whichEncounter == 12 || whichEncounter == 13) {
+          return "Cannibal";
+        } else if (whichEncounter == 14 || whichEncounter == 15) {
+          return "Chwinga";
+        } else if (whichEncounter == 16) {
+          return "Cyclops";
+        } else if (whichEncounter == 17) {
+          return "Allosaurus";
+        } else if (whichEncounter == 18) {
+          return "Ankylosaurus";
+        } else if (whichEncounter == 19) {
+          return "Brontosaurus";
+        } else if (whichEncounter == 20 || whichEncounter == 21) {
+          return "Deinonychus";
+        } else if (whichEncounter == 22 || whichEncounter == 23) {
+          return "Hadrosaurus";
+        } else if (whichEncounter == 24) {
+          return "Pteranodon";
+        } else if (whichEncounter == 25 || whichEncounter == 26) {
+          return "Stegosaurus";
+        } else if (whichEncounter == 27 || whichEncounter == 28) {
+          return "Triceratops";
+        } else if (whichEncounter == 29 || whichEncounter == 30) {
+          return "Tyrannosaurus";
+        } else if (whichEncounter >= 31 && whichEncounter <= 35) {
+          return "Velociraptor";
+        } else if (whichEncounter == 36) {
+          return "Faerie Dragon";
+        } else if (whichEncounter == 37) {
+          return "Elbis";
+        } else if (whichEncounter >= 38 && whichEncounter <= 42) {
+          return "Emerald Enclave";
+        } else if (whichEncounter == 43 || whichEncounter == 44) {
+          return "Dead explorer";
+        } else if (whichEncounter == 45) {
+          return "Explorer";
+        } else if (whichEncounter == 46) {
+          return "Flail Snail";
+        } else if (whichEncounter >= 47 && whichEncounter <= 50) {
+          return "Flaming Fist";
+        } else if (whichEncounter == 51) {
+          return "Flying Monkey";
+        } else if (whichEncounter == 52 || whichEncounter == 53) {
+          return "Flying Snake";
+        } else if (whichEncounter == 54 || whichEncounter == 55) {
+          return "Frost Giant";
+        } else if (whichEncounter == 56) {
+          return "Giant Boar";
+        } else if (whichEncounter == 57) {
+          return "Giant Frog";
+        } else if (whichEncounter == 58) {
+          return "Giant Lizard";
+        } else if (whichEncounter == 59) {
+          return "Giant Scorpion";
+        } else if (whichEncounter == 60) {
+          return "Giant Wasps";
+        } else if (whichEncounter == 61 || whichEncounter == 62) {
+          return "Girallon";
+        } else if (whichEncounter == 63 || whichEncounter == 64) {
+          return "Goblin";
+        } else if (whichEncounter == 65 || whichEncounter == 66) {
+          return "Grung";
+        } else if (whichEncounter == 67) {
+          return "Jaculis";
+        } else if (whichEncounter == 68) {
+          return "Kamadan";
+        } else if (whichEncounter == 69 || whichEncounter == 70) {
+          return "Lizardfolk";
+        } else if (whichEncounter == 71 || whichEncounter == 72) {
+          return "Mad Monkey Mist";
+        } else if (whichEncounter == 73) {
+          return "Mantrap";
+        } else if (whichEncounter == 74) {
+          return "Nighthag";
+        } else if (whichEncounter == 75) {
+          return "Pterafolk";
+        } else if (whichEncounter == 76) {
+          return "Rare Plant";
+        } else if (whichEncounter == 77) {
+          return "Red Wizard";
+        } else if (whichEncounter == 78 || whichEncounter == 79) {
+          return "Constrictor Snake";
+        } else if (whichEncounter == 80) {
+          return "Giant Constrictor Snake";
+        } else if (whichEncounter == 81) {
+          return "Giant Poisonous Snake";
+        } else if (whichEncounter == 82) {
+          return "Spider";
+        } else if (whichEncounter >= 83 && whichEncounter <= 85) {
+          return "Statue of Ubtao";
+        } else if (whichEncounter == 86) {
+          return "Stirge";
+        } else if (whichEncounter == 87) {
+          return "Su-monster";
+        } else if (whichEncounter == 88) {
+          return "Swarm of Bats";
+        } else if (whichEncounter == 89) {
+          return "Swarm of Insects";
+        } else if (whichEncounter == 90) {
+          return "Tabaxi Hunter";
+        } else if (whichEncounter == 91) {
+          return "Tiger";
+        } else if (whichEncounter == 92) {
+          return "Tri-flower Frond";
+        } else if (whichEncounter == 93) {
+          return "Vegepygmies";
+        } else if (whichEncounter == 94) {
+          return "Wereboar";
+        } else if (whichEncounter == 95) {
+          return "Weretiger";
+        } else if (whichEncounter == 96) {
+          return "Winterscape";
+        } else if (whichEncounter == 97) {
+          return "Yellow Musk Creeper And Zombies";
+        } else if (whichEncounter == 98) {
+          return "Yuan-ti";
+        } else if (whichEncounter == 99) {
+          return "Zhentarim";
+        } else if (whichEncounter == 100) {
+          return "Zorbos";
+        }
+
+      // Lesser undead encounters: --------------------------------------------
+      } else if (map [playerPosition] [0] == 2){
+        
+      
+      // Greater undead encounters: -------------------------------------------
+      } else if (map [playerPosition] [0] == 3){
+        
+    
+      // Mountain encounters: -------------------------------------------------
+      } else if (map [playerPosition] [0] == 4){
+        
+      
+      // Swamp encounters: ----------------------------------------------------
+      } else if (map [playerPosition] [0] == 6){
+        
+  
+      // Wasteland encounters: ------------------------------------------------
+      } else if (map [playerPosition] [0] == 7){
+        
       }
     }
-
     return "None";
   }
 }

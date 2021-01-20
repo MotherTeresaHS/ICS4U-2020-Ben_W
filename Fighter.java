@@ -10,6 +10,9 @@
 
 public class Fighter extends Character {
   
+  public boolean isSecondWindReady = true;
+  public boolean isProtectionReady = true;
+  
   public Fighter() {
     super();
     tempHitPoints = 0;
@@ -34,12 +37,24 @@ public class Fighter extends Character {
   public static String choices() {
     return "[1 = Run] [2 = Attack] [3 = Dodge] [4 = Nothing]";
   }
-
-  public static String run() {
-    return "[1 = Run away] [2 = Inimidate] [3 = Persuade] [4 = Return]";
+  
+  public static String bonusActions() {
+    return "[1 = Second Wind] [2 = Attack] [3 = Nothing]";
   }
   
-  public int makeAttackRoll(int attackRoll) {
-    return attackRoll + (((strength - strength % 2) - 10) / 2) + super.proficiencyBonus;
+  public String secondWind(int roll) {
+    if (isSecondWindReady) {
+      isSecondWindReady = false;
+      currentHitPoints += roll + 1;
+      if (currentHitPoints > maxHitPoints) {
+        currentHitPoints = maxHitPoints;
+        return "\u001B[32m" + name + " got their second wind! " + name
+               + " returned to max health!\u001B[0m";
+      }
+      return "\u001B[32m" + name + " got their second wind! " + name
+             + " regained " + (roll + 1) + " hit points!\u001B[0m";
+    }
+    return "\u001B[31m" + name + " has already used second wind, finish a long"
+           + " rest to use it again!\u001B[0m";
   }
 }
