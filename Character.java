@@ -39,10 +39,10 @@ abstract class Character {
   public int proficiencyBonus = 2;
   private int exhaustion = 0;
 
-  public int lbsOfFood = 4;
-  public int maxFood = 6;
-  public int gallonsOfWater = 2;
-  public int maxWater = 4;
+  public int lbsOfFood = 6;
+  public int maxFood = 10;
+  public int gallonsOfWater = 4;
+  public int maxWater = 10;
   public int daysWithoutFood = 0;
   public int tookExhaustion;
 

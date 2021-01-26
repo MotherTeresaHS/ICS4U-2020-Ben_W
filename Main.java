@@ -28,45 +28,11 @@ public class Main {
   }
 
   /////////////////////////////////////////////////////////////////////////////
-  
-  public static int enemyAttack(String encounter, String attackName,
-                                  Dice someDice, String rollStatus) {
-    //-------------------------------------------------------------------------
-    // Enemy Attacks.
-
-    // Goblins ----------------------------------------------------------------
-    if (encounter.equals("Goblin")) {
-      if (attackName.equals("Attack Roll")) {
-        return someDice.rollD20(rollStatus) + 4;
-      } else if (attackName.equals("Damage Roll")) {
-        return someDice.rollD4() - 1;
-      }
-      
-    // Apes ----------------------------------------------------------------
-    } else if (encounter.equals("Ape")) {
-      if (attackName.equals("Attack Roll")) {
-        return someDice.rollD20(rollStatus) + 5;
-      } else if (attackName.equals("Damage Roll")) {
-        return someDice.rollD6() + 3 + someDice.rollD6() + 3;
-      }
-    
-    // Baboons ----------------------------------------------------------------
-    } else if (encounter.equals("Baboon")) {
-      if (attackName.equals("Attack Roll")) {
-        return someDice.rollD20(rollStatus) + 1;
-      } else if (attackName.equals("Damage Roll")) {
-        return someDice.rollD4() - 1;
-      }
-    }
-    return 0;
-    //-------------------------------------------------------------------------
-  }
-  
-  /////////////////////////////////////////////////////////////////////////////
 
   public static String runEncounter(String encounter, Weather someWeather,
                                     Dice someDice, Fighter someFighter,
-                                    Attack someAttack) {
+                                    Attack someAttack, Encounter someEncounter)
+                                    {
     //-------------------------------------------------------------------------
     // Scanners
 
@@ -105,68 +71,40 @@ public class Main {
     // Number of enemies killed in one turn.
     int enemiesKilled;
     int actionNumber;
-    int expForOne = 0;
-
-    // Enemy Variables --------------------------------------------------------
-    // Enemy's type.
-    String enemyType = "";
-    // How many enemies are there?
-    int numberOfEnemies = 0;
-    // How much health do they all have?
-    int enemyHealth = 0;
-    // How much health does one have?
-    int healthOfOne = 0;
-    // Howdifficult is it to escape from them?
-    int runDc = 0;
-    // How high is there armor class?
-    int enemyAc = 0;
 
     //-------------------------------------------------------------------------
-    // Enemy Encounters.
+    // Encounters.
 
-    // Goblins ----------------------------------------------------------------
-    if (encounter.equals("Goblin")) { 
-      numberOfEnemies = someDice.rollD6() + someDice.rollD6() + 4;
-      System.out.println("- The party is ambushed by " + (numberOfEnemies - 1)
-                         + " goblins lead by a goblin boss -");
-      healthOfOne = 7;
-      enemyHealth = healthOfOne * numberOfEnemies;
-      runDc = 20;
-      enemyAc = 15;
-      enemyType = "Humanoid";
-      expForOne = 50;
-    
-    // Apes -------------------------------------------------------------------
-    } else if (encounter.equals("Ape")) { 
-      numberOfEnemies = someDice.rollD4() + someDice.rollD4();
-      System.out.println("- The party are attacked by " + (numberOfEnemies)
-                         + " apes enjoying some exelent fruit -");
-      healthOfOne = 19;
-      enemyHealth = healthOfOne * numberOfEnemies;
-      runDc = 10;
-      enemyAc = 12;
-      enemyType = "Beast";
-      expForOne = 100;
-      
-    // Baboons -------------------------------------------------------------------
-    } else if (encounter.equals("Baboon")) { 
-      numberOfEnemies = someDice.rollD6() + someDice.rollD6() + someDice.rollD6();
-      System.out.println("- A pack of " + (numberOfEnemies)
-                         + " baboons take umbrage in the party's intrusion and attack -");
-      healthOfOne = 3;
-      enemyHealth = healthOfOne * numberOfEnemies;
-      runDc = 5;
-      enemyAc = 12;
-      enemyType = "Beast";
-      expForOne = 10;
-    
-    //-------------------------------------------------------------------------
-    } else {
-      // Returning none if there wasn't an encounter.
+    if (encounter.equals("None")) {
       return "None";
     }
 
-    int startingEnemies = numberOfEnemies;
+    System.out.println(someEncounter.setEncounterStats(encounter));
+    
+    // If the encounter is Friendly.
+    if (someEncounter.getEncounterType(encounter).equals("Friendly")) {
+      wait(3000);
+      return "None";
+      
+    // If the encounter is Special.
+    } else if (someEncounter.getEncounterType(encounter).equals("Special")) {
+      wait(3000);
+      return "None";
+      
+    // If the encounter is Food.
+    } else if (someEncounter.getEncounterType(encounter).equals("Food")) {
+      wait(2000);
+      clearScreen();
+      System.out.println("- After some time, they agree to share their food "
+                         + "with you. -");
+      someFighter.lbsOfFood = someFighter.maxFood;
+      someFighter.gallonsOfWater = someFighter.maxWater;
+      wait(2000);
+      clearScreen();
+      return "None";
+    }
+
+    int startingEnemies = someEncounter.numberOfEnemies;
 
     // Waiting to make sure that the players have seen the text.
     wait(3000);
@@ -175,7 +113,7 @@ public class Main {
     // Combat.
     
     // While loop to run the combat while there are still enemies.
-    while (enemyHealth > 0) {
+    while (someEncounter.enemyHealth > 0) {
 
       actionNumber = 0;
       // Fighter's Turn -------------------------------------------------------
@@ -223,12 +161,12 @@ public class Main {
           // Asking the player how they wish to run.
           System.out.println("How do you want to do this?");
           // If the enemy is a humanoid.
-          if (enemyType.equals("Humanoid")) {
+          if (someEncounter.enemyType.equals("Humanoid")) {
             System.out.println("[1 = Run away] [2 = Inimidate] [3 = Persuade]"
                                + " [R = Return]");
 
           // If the enemy is a beast.
-          } else if (enemyType.equals("Beast")) {
+          } else if (someEncounter.enemyType.equals("Beast")) {
             System.out.println("[1 = Run away] [2 = Inimidate] [3 = Tame]"
                                + " [R = Return]");
           }
@@ -239,7 +177,7 @@ public class Main {
           if (playerChoice.equals("1")) {
             // Making the check to see if they've succeeded.
             if (someFighter.makeCheck("Dex", "Acrobatics", "", someDice.
-                                      rollD20(abilityRollStatus)) > runDc) {
+                                      rollD20(abilityRollStatus)) > someEncounter.runDc) {
               // They did it.
               System.out.println("\u001B[32m- The party successfully escaped "
                                  + " from the " + encounter + "s -\u001B[0m");
@@ -253,10 +191,11 @@ public class Main {
             }
 
           // Intimidate -------------------------------------------------------
-          } else if (playerChoice.equals("2") && enemyType.equals("humanoid")) {
+          } else if (playerChoice.equals("2")) {
             // Making the check to see if they've succeeded.
             if (someFighter.makeCheck("Cha", "Intimidation", "", someDice.
-                                      rollD20(abilityRollStatus)) > runDc) {
+                                      rollD20(abilityRollStatus))
+                                      > someEncounter.intimidateDc) {
               // They did it.
               System.out.println("\u001B[32m- " + someFighter.name
                                  + " successfully scared off the "
@@ -272,10 +211,10 @@ public class Main {
             }
             
           // Intimidate -------------------------------------------------------
-          } else if (playerChoice.equals("2") && enemyType.equals("Beast")) {
+          } else if (playerChoice.equals("3") && someEncounter.enemyType.equals("Beast")) {
             // Making the check to see if they've succeeded.
             if (someFighter.makeCheck("Wis", "Animal Handling", "", someDice.
-                                      rollD20(abilityRollStatus)) > runDc) {
+                                      rollD20(abilityRollStatus)) > someEncounter.tameDc) {
               // They did it.
               System.out.println("\u001B[32m- " + someFighter.name
                                  + " successfully tamed the "
@@ -291,10 +230,11 @@ public class Main {
             }
 
           // Persuade ---------------------------------------------------------
-          } else if (playerChoice.equals("3") && enemyType.equals("Humanoid")) {
+          } else if (playerChoice.equals("3") && someEncounter.enemyType.equals("Humanoid")) {
             // Making the check to see if they've succeeded.
             if (someFighter.makeCheck("Cha", "Persuasion", "", someDice.
-                                      rollD20(abilityRollStatus)) > runDc) {
+                                      rollD20(abilityRollStatus))
+                                      > someEncounter.persuadeDc) {
               // They did it.
               System.out.println("\u001B[32m- " + someFighter.name
                                  + " successfully persuaded the " + encounter
@@ -373,7 +313,7 @@ public class Main {
                                    + " to hit.");
 
                 // If it hits:
-                if (finalValue > enemyAc) {
+                if (finalValue > someEncounter.enemyAc) {
                   if (attackRoll == 20) {
                     System.out.println("");
                     System.out.println("---------------");
@@ -402,7 +342,7 @@ public class Main {
                   System.out.println("\u001B[32m" + someFighter.name
                                      + " dealt " + damage
                                      + " damage!\u001B[0m");
-                  enemyHealth -= damage;
+                  someEncounter.enemyHealth -= damage;
 
                   // Keeping track of how many enemies were killed.
                   enemiesKilled = 0;
@@ -410,9 +350,9 @@ public class Main {
                   // Kills ----------------------------------------------------
                   // Counting how many enemies were killed.
                   while (true) {
-                    if (enemyHealth < healthOfOne * (numberOfEnemies - 1)) {
+                    if (someEncounter.enemyHealth < someEncounter.healthOfOne * (someEncounter.numberOfEnemies - 1)) {
                       enemiesKilled++;
-                      numberOfEnemies--;
+                      someEncounter.numberOfEnemies--;
                     } else {
                       break;
                     }
@@ -543,7 +483,7 @@ public class Main {
                                      + " to hit.");
 
                   // If it hits:
-                  if (finalValue > enemyAc) {
+                  if (finalValue > someEncounter.enemyAc) {
                     if (attackRoll == 20) {
                       System.out.println("");
                       System.out.println("---------------");
@@ -573,7 +513,7 @@ public class Main {
                     System.out.println("\u001B[32m" + someFighter.name
                                        + " dealt " + damage
                                        + " damage!\u001B[0m");
-                    enemyHealth -= damage;
+                    someEncounter.enemyHealth -= damage;
                     someFighter.hasShieldEquiped = false;
 
                     // Keeping track of how many enemies were killed.
@@ -582,9 +522,9 @@ public class Main {
                     // Kills --------------------------------------------------
                     // Counting how many enemies were killed.
                     while (true) {
-                      if (enemyHealth < healthOfOne * (numberOfEnemies - 1)) {
+                      if (someEncounter.enemyHealth < someEncounter.healthOfOne * (someEncounter.numberOfEnemies - 1)) {
                         enemiesKilled++;
-                        numberOfEnemies--;
+                        someEncounter.numberOfEnemies--;
                       } else {
                         break;
                       }
@@ -682,71 +622,73 @@ public class Main {
       System.out.println("\u001B[31m- " + encounter + "'s turn -\u001B[0m");
       // Waiting to make sure that they see the text.
       // For every enemy in the encounter.
-      for (int enemyNumber = 0; enemyNumber < numberOfEnemies; enemyNumber++) {
-        wait(1000);
-        // Attacking ----------------------------------------------------------
-        System.out.println(encounter + " " + (enemyNumber + 1) + " attacks "
+      for (int enemyNumber = 0; enemyNumber < someEncounter.numberOfEnemies; enemyNumber++) {
+        for (int attackNumber = 0; attackNumber < someEncounter.numberOfAttacks; attackNumber++) {
+          wait(1000);
+          // Attacking ----------------------------------------------------------
+          System.out.println(encounter + " " + (enemyNumber + 1) + " attacks "
                            + someFighter.name);
-        // Setting the attack roll status to neutral.
-        attackRollStatus = "";
+          // Setting the attack roll status to neutral.
+          attackRollStatus = "";
 
-        // If the player decided to dodge:
-        if (someFighter.dodge) {
-          // Setting the attack roll status to disadvantage.
-          attackRollStatus = "Disadvantage";
-        }
+          // If the player decided to dodge:
+          if (someFighter.dodge) {
+            // Setting the attack roll status to disadvantage.
+            attackRollStatus = "Disadvantage";
+          }
         
-        // Fighting Style (Protection) ----------------------------------------
-        if (someFighter.fightingStyle.equals("Protection")
-            && someFighter.isProtectionReady) {
-          attackRollStatus = "Disadvantage";
-          someFighter.isProtectionReady = false;
-        }
+          // Fighting Style (Protection) ----------------------------------------
+          if (someFighter.fightingStyle.equals("Protection")
+              && someFighter.isProtectionReady) {
+            attackRollStatus = "Disadvantage";
+            someFighter.isProtectionReady = false;
+          }
 
-        // Attack roll --------------------------------------------------------
-        int enemyAttackRoll = enemyAttack(encounter, "Attack Roll", someDice,
-                                          attackRollStatus);
-        // Checking to see if it hit.
-        if (enemyAttackRoll > someFighter.currentArmorClass) {
-          // Damage roll ----------------------------------------------------
-          // If they hit:
-          // Getting the damage dealt.
-          damage = enemyAttack(encounter, "Damage Roll", someDice,
-                                 attackRollStatus);
-          // Applying the damage.
-          someFighter.currentHitPoints -= damage;
-          // Telling the player how much damage they took.
-          System.out.println("\u001B[31m☠ " + encounter + " " 
-                             + (enemyNumber + 1) + " has hit "
-                             + someFighter.name + " for " + damage
-                             + " damage ☠\u001B[0m");
-          // Checking if the fighter is dead.
-          if (someFighter.currentHitPoints <= 0) {
-            wait(1000);
-            // Telling the user that their character has died.
-            if (someFighter.name.equals("Bobby")) {
-              System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
+          // Attack roll --------------------------------------------------------
+          int enemyAttackRoll = someEncounter.enemyAttack(encounter, "Attack Roll",
+                                                          attackRollStatus, (attackNumber + 1));
+          // Checking to see if it hit.
+          if (enemyAttackRoll > someFighter.currentArmorClass) {
+            // Damage roll ----------------------------------------------------
+            // If they hit:
+            // Getting the damage dealt.
+            damage = someEncounter.enemyAttack(encounter, "Damage Roll",
+                                               attackRollStatus, (attackNumber + 1));
+            // Applying the damage.
+            someFighter.currentHitPoints -= damage;
+            // Telling the player how much damage they took.
+            System.out.println("\u001B[31m☠ " + encounter + " " 
+                               + (enemyNumber + 1) + " has hit "
+                               + someFighter.name + " for " + damage
+                               + " damage ☠\u001B[0m");
+            // Checking if the fighter is dead.
+            if (someFighter.currentHitPoints <= 0) {
+              wait(1000);
+              // Telling the user that their character has died.
+              if (someFighter.name.equals("Bobby")) {
+                System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
+                System.out.println("[Press ENTER to continue]");
+                enter = scanForEnter.nextLine();
+                return "dead";
+              }
+              System.out.println("\u001B[31m☠ " + someFighter.name + " has died ☠\u001B[0m");
               System.out.println("[Press ENTER to continue]");
               enter = scanForEnter.nextLine();
               return "dead";
             }
-            System.out.println("\u001B[31m☠ " + someFighter.name + " has died ☠\u001B[0m");
-            System.out.println("[Press ENTER to continue]");
-            enter = scanForEnter.nextLine();
-            return "dead";
+          // Otherise if the enemy missed:
+          } else {
+            System.out.println("\u001B[32m" + encounter + " "
+                               + (enemyNumber + 1) + " missed "
+                               + someFighter.name + "!\u001B[0m");
           }
-        // Otherise if the enemy missed:
-        } else {
-          System.out.println("\u001B[32m" + encounter + " "
-                             + (enemyNumber + 1) + " missed "
-                             + someFighter.name + "!\u001B[0m");
         }
+        wait(1000);
       }
-      wait(1000);
     }
     clearScreen();
     System.out.println("\u001B[32m The party defeated the " + encounter + "s!\u001B[0m");
-    System.out.println("\u001B[32m Everyone gained " + (expForOne * startingEnemies / 1)+ "exp!\u001B[0m");
+    System.out.println("\u001B[32m Everyone gained " + (someEncounter.expForOne * startingEnemies / 1)+ "exp!\u001B[0m");
     wait(5000);
     return "0";
   }
@@ -755,7 +697,8 @@ public class Main {
   
   public static String dailyProcedure(ChultMap someMap, Weather someWeather,
                                       Dice someDice, Fighter someFighter,
-                                      Attack someAttack) {
+                                      Attack someAttack,
+                                      Encounter someEncounter) {
 
     //-------------------------------------------------------------------------
     // Scanners
@@ -893,7 +836,7 @@ public class Main {
     //Checking for encounters.
     String encounter = someMap.rollEncounter(someDice.rollD20(""),
                                              someDice.rollD100());
-    String end = runEncounter(encounter, someWeather, someDice, someFighter, someAttack);
+    String end = runEncounter(encounter, someWeather, someDice, someFighter, someAttack, someEncounter);
     if (end.equals("dead")) {
       clearScreen();
       return ("- GAME OVER -");
@@ -964,7 +907,7 @@ public class Main {
         System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
         System.out.println("[Press ENTER to continue]");
         enter = scanForEnter.nextLine();
-        return "dead";
+        return "- GAME OVER -";
       }
       System.out.println("\u001B[31m☠ " + someFighter.name + " has passed "
        + "away due to exhaustion " + "☠\u001B[0m");
@@ -1538,6 +1481,9 @@ public class Main {
     
     // Creating object to get stats for various attacks.
     Attack someAttack = new Attack();
+
+    // Creating object to get encounter stats.
+    Encounter someEncounter = new Encounter();
   
     //-------------------------------------------------------------------------
     // Intro
@@ -1592,7 +1538,7 @@ public class Main {
     // Entering into the main game loop.
     while (true) {
       String end = dailyProcedure(someMap, someWeather, someDice, someFighter,
-                                  someAttack);
+                                  someAttack, someEncounter);
       if (end.equals("- GAME OVER -")) {
         System.out.println("- GAME OVER -");
         break;
