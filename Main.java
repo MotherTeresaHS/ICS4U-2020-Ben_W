@@ -6,18 +6,23 @@
 * @since   2021-1-6 
 */
 
-///////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
 //-------------------------------------------------------------------------
 // Imports:
 
 import java.util.Scanner;  // Import the Scanner class
 
-///////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
 public class Main {
+
+//=============================================================================
   
-  /////////////////////////////////////////////////////////////////////////////
+  public static String lastWeapon = "";
+  public static int lastWeaponNumber = -1;
+  
+//=============================================================================
   public static void wait(int ms) {
     try {
       Thread.sleep(ms);
@@ -26,36 +31,13 @@ public class Main {
       Thread.currentThread().interrupt();
     }
   }
-
-  /////////////////////////////////////////////////////////////////////////////
-
-  public static String runEncounter(String encounter, Weather someWeather,
-                                    Dice someDice, Fighter someFighter,
-                                    Attack someAttack, Encounter someEncounter)
-                                    {
-    //-------------------------------------------------------------------------
-    // Scanners
-
+  
+//=============================================================================
+  public static String weaponAttack(String type, Fighter someFighter,
+                                    Encounter someEncounter, Dice someDice,
+                                    Attack someAttack, String encounter) {
     // Creating a scanner to scan the player's various choices.
     Scanner scanChoice = new Scanner(System.in);
-    
-    // Creating a scanner to scan for enter to be pressed.
-    Scanner scanForEnter = new Scanner(System.in);
-    
-    //-------------------------------------------------------------------------
-    // Initializing the combat.
-
-    // Clearing screen.
-    clearScreen();
-
-    // Variables --------------------------------------------------------------
-
-    // Variable checking for enter.
-    String enter;
-    // Variable for the player's decision.
-    String playerChoice;
-    // Variable for the creature's ability roll status.
-    String abilityRollStatus;
     // Variable for the creature's attack roll status.
     String attackRollStatus = "";
     // Variable for how much damage a creature has done.
@@ -70,550 +52,410 @@ public class Main {
     int finalValue;
     // Number of enemies killed in one turn.
     int enemiesKilled;
-    int actionNumber;
+    int attackNumber;
 
+    if (type.equals("Bonus Action")
+        && !someAttack.attackProperty1(lastWeapon).equals("Light")) {
+      return "You are unable to make an attack as a bonus action.";
+    }
+    // Finding the weapon -----------------------------------------------------
+    // Clearing the screen.
+    clearScreen();
+    // Printing out info on the current character.
+    System.out.println(someFighter.getCharacterInfo());
+    // Showing the player their weapon choices.
+    System.out.println(someFighter.showWeapons());
+    // Asking them which weapon they would like to use.
+    System.out.println("Which weapon would you like to attack with?");
+    // Getting which weapon they would like to use and finding it.
+    weaponNumber = scanChoice.nextLine();
+    foundWeapon = someFighter.findWeapon(weaponNumber);
+    // Going back to the main menu.
+    if (weaponNumber.equals("B") || weaponNumber.equals("b")) {
+      return "Going back...";
+    // If it couldn't find weapon.
+    } else if (foundWeapon.equals("Null")) {
+      System.out.println("\u001B[31mX Couldn't find weapon X\u001B[0m");
+    // Making sure they arent braking any rules on a bonus action.
+    } else if (type.equals("Bonus Action")
+               && (!someAttack.attackProperty1(foundWeapon).equals("Light")
+               || lastWeaponNumber == Integer.parseInt(weaponNumber))) {
+      return "You are unable to make an attack as a bonus action.";
+    // If it did find the weapon.
+    } else {
+      // Setting the last weapon number to the current one.
+      lastWeaponNumber = Integer.parseInt(weaponNumber);
+      // Make an attack for each attack the character can make.
+      for (attackNumber = 0; attackNumber < someFighter.numberOfAttacks;
+           attackNumber++) {
+        // Attack rolls -------------------------------------------------------
+        // Telling the player that they made an attack.
+        System.out.println("");
+        System.out.println(someFighter.name + " made an attack with "
+                           + "their " + foundWeapon + "!");
+        wait(500);
+        // Making the attack roll ---------------------------------------
+        attackRoll = someFighter.makeAttackRoll(someAttack.
+                                                attackProperty1(foundWeapon),
+                                                someAttack.
+                                                attackProperty2(foundWeapon));
+        // Telling the player what the character rolled.
+        System.out.println(someFighter.name + " rolled a " + attackRoll
+                           + " to hit.");
+        wait(500);
+        // If it hits:
+        if (attackRoll > someEncounter.enemyAc) {
+          // Damage rolls ---------------------------------------------------
+          // Getting how much damage the player did.
+          damage = someAttack.makeAttack(someFighter.strength,
+                                         someFighter.dexterity, foundWeapon,
+                                         someFighter.criticalHit,
+                                         someFighter.fightingStyle, 
+                                         someFighter.proficiencyBonus);
+        // Fighting style (Dueling) -----------------------------------
+        // Checking if the player picked a two handed or ranged.
+        if (someAttack.attackProperty1(foundWeapon).equals("Two-Handed")
+            || someAttack.attackProperty2(foundWeapon).equals("Ranged")) {
+          System.out.print("");
+          // Making sure that the player has the fighting style
+        } else if (someFighter.fightingStyle.equals("Dueling")) {
+          damage += 2;
+        }
+        // Checking for crits.
+        if (someFighter.criticalHit) {
+          // Telling them that they scored a crit.
+          System.out.println("\n---------------\n\033[0;93m CRITICAL"
+                                + " HIT!\u001B[0m\n---------------");
+          wait(500);
+        }
+        // Applying the damage ----------------------------------------
+        System.out.println("\u001B[32m" + someFighter.name + " dealt "
+                             + damage + " damage!\u001B[0m");
+        wait(500);
+        // Subtracking the damage fom their health.
+        someEncounter.enemyHealth -= damage;
+        // Keeping track of how many enemies were killed.
+        enemiesKilled = 0;
+        // Kills ------------------------------------------------------
+        // Counting how many enemies were killed.
+        while (true) {
+          // Checking if the health is below the threshhold.
+          if (someEncounter.enemyHealth < someEncounter.healthOfOne *
+              (someEncounter.numberOfEnemies - 1)
+              && someEncounter.numberOfEnemies - 1 != 0) {
+            // Adding 1 to enemies killed.
+            enemiesKilled++;
+            // Subtrackign 1 from number of enemies.
+            someEncounter.numberOfEnemies--;
+            // If its done.
+          } else {
+            // End the count..
+            break;
+          }
+        }
+        // If the player killed any enemies
+        if (enemiesKilled > 0) {
+          System.out.println("");
+          System.out.println(someFighter.name + " killed " + enemiesKilled
+                             + " " + encounter);
+          wait(500);
+        }
+        // Misses -------------------------------------------------------
+        // Else if they miss:
+        } else {
+          System.out.println("\u001B[31mX " + someFighter.name +
+                               " missed " + encounter + " X\u001B[0m");
+        }
+      }
+      return "";
+    }
+    return "";
+  }
+
+//=============================================================================
+
+  public static String runEncounter(String encounter, Weather someWeather,
+                                    Dice someDice, Fighter someFighter,
+                                    Attack someAttack, Encounter someEncounter)
+                                    {
     //-------------------------------------------------------------------------
+    // Scanners
+    // Creating a scanner to scan the player's various choices.
+    Scanner scanChoice = new Scanner(System.in);
+    // Creating a scanner to scan for enter to be pressed.
+    Scanner scanForEnter = new Scanner(System.in);
+    // Clearing screen.
+    clearScreen();
+    // Variables --------------------------------------------------------------
+    // Variable checking for enter.
+    String enter;
+    // Variable for the player's decision.
+    String playerChoice;
+    // Variable for the creature's ability roll status.
+    String abilityRollStatus;
+    // Variable for how much damage a creature has done.
+    int damage = 0;
+    // Which action is this?
+    int actionNumber;
+    // What the player chose to so.
+    String playerDid;
+    // Did they escaep?
+    String escapeStatus;
+    // Death Saves
+    int deathSaveRoll;
+    // Status of the attack roll.
+    String attackRollStatus;
+    String returnValue;
+    
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
     // Encounters.
 
+    // Returning none if there is no encounters today.
     if (encounter.equals("None")) {
       return "None";
     }
-
+    // Printing out the encounter starting text.
     System.out.println(someEncounter.setEncounterStats(encounter));
-    
-    // If the encounter is Friendly.
+    // If the encounter is Friendly:
     if (someEncounter.getEncounterType(encounter).equals("Friendly")) {
       wait(3000);
+      // Returning to dailyProcedure().
       return "None";
-      
-    // If the encounter is Special.
+    // If the encounter is Special:
     } else if (someEncounter.getEncounterType(encounter).equals("Special")) {
       wait(3000);
+      // Returning to dailyProcedure().
       return "None";
-      
-    // If the encounter is Food.
+    // If the encounter is Food:
     } else if (someEncounter.getEncounterType(encounter).equals("Food")) {
-      wait(2000);
+      wait(3000);
+      // Clearing the screen.
       clearScreen();
+      // Telling the user that they decided to share their food with the group.
       System.out.println("- After some time, they agree to share their food "
                          + "with you. -");
-      someFighter.lbsOfFood = someFighter.maxFood;
-      someFighter.gallonsOfWater = someFighter.maxWater;
-      wait(2000);
+      // Maxing out the player's food and water.
+      someFighter.lbsOfFood += 10;
+      someFighter.gallonsOfWater += 10;
+      wait(3000);
+      // Clearing the screen.
       clearScreen();
+      // Returning to dailyProcedure().
       return "None";
+    // Otherwise:
+    } else {
+      wait(3000);
     }
-
+    // Saving how many enemies there are at the start of the encounter.
     int startingEnemies = someEncounter.numberOfEnemies;
-
     // Waiting to make sure that the players have seen the text.
     wait(3000);
-
     //-------------------------------------------------------------------------
     // Combat.
-    
+    actionNumber = 0;
     // While loop to run the combat while there are still enemies.
     while (someEncounter.enemyHealth > 0) {
-
-      actionNumber = 0;
-      // Fighter's Turn -------------------------------------------------------
-      while (actionNumber < someFighter.numberOfActions) {
+      //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      // Fighter's Turn
+      while (actionNumber < someFighter.numberOfActions
+             && someFighter.isUnconcious == false
+             && someFighter.isDead == false) {
         // Clearing the screen.
         clearScreen();
-        someFighter.hasShieldEquiped = true;
         // Printing out info on the current character.
         System.out.println(someFighter.getCharacterInfo());
-
         // Asking the user what they want their character to do.
         System.out.println("What will " + someFighter.name + " do?");
+        // Printing out what their choices are.
         System.out.println(someFighter.choices());
+        // Getting their choice.
         playerChoice = scanChoice.nextLine();
-
-        // Exhaustion ---------------------------------------------------------
-        // If the character has 1 or more levels of exhaustion.
-        if (someFighter.getExhaustion() > 0) {
-          abilityRollStatus = "Disadvantage";
-        } else {
-          abilityRollStatus = "";
-        }
-        
-        // If the character has 3 or more levels of exhaustion.
-        if (someFighter.getExhaustion() > 2) {
-          attackRollStatus = "Disadvantage";
-        } else {
-          attackRollStatus = "";
-        }
-
-        // If the character has 5 or more levels of exhaustion.
-        if (someFighter.getExhaustion() > 4) {
-          someFighter.canRun = false;
-        } else {
-          someFighter.canRun = true;
-        }
-
-        // Option 1: Running --------------------------------------------------
-        if (playerChoice.equals("1")) {
-          // Clearing the screen.
-          clearScreen();
-          // Printing out info on the current character.
-          System.out.println(someFighter.getCharacterInfo());
-
-          // Asking the player how they wish to run.
-          System.out.println("How do you want to do this?");
-          // If the enemy is a humanoid.
-          if (someEncounter.enemyType.equals("Humanoid")) {
-            System.out.println("[1 = Run away] [2 = Inimidate] [3 = Persuade]"
-                               + " [R = Return]");
-
-          // If the enemy is a beast.
-          } else if (someEncounter.enemyType.equals("Beast")) {
-            System.out.println("[1 = Run away] [2 = Inimidate] [3 = Tame]"
-                               + " [R = Return]");
-          }
-          // Getting the player's decision.
-          playerChoice = scanChoice.nextLine();
-
-          // Run away ---------------------------------------------------------
-          if (playerChoice.equals("1")) {
-            // Making the check to see if they've succeeded.
-            if (someFighter.makeCheck("Dex", "Acrobatics", "", someDice.
-                                      rollD20(abilityRollStatus)) > someEncounter.runDc) {
-              // They did it.
-              System.out.println("\u001B[32m- The party successfully escaped "
-                                 + " from the " + encounter + "s -\u001B[0m");
-              return "Got away";
-
-            } else {
-              // They didn't do it.
-              System.out.println("\u001B[31m- The party failed to escape "
-                                 + " from the " + encounter + "s -\u001B[0m");
-              actionNumber++;
-            }
-
-          // Intimidate -------------------------------------------------------
-          } else if (playerChoice.equals("2")) {
-            // Making the check to see if they've succeeded.
-            if (someFighter.makeCheck("Cha", "Intimidation", "", someDice.
-                                      rollD20(abilityRollStatus))
-                                      > someEncounter.intimidateDc) {
-              // They did it.
-              System.out.println("\u001B[32m- " + someFighter.name
-                                 + " successfully scared off the "
-                                 + encounter + "s -\u001B[0m");
-              return "Got away";
-
-            } else {
-              // They didn't do it.
-              System.out.println("\u001B[31m- " + someFighter.name + " failed "
-                                 + "to scare off the " + encounter
-                                 + "s -\u001B[0m");
-              actionNumber++;
-            }
-            
-          // Intimidate -------------------------------------------------------
-          } else if (playerChoice.equals("3") && someEncounter.enemyType.equals("Beast")) {
-            // Making the check to see if they've succeeded.
-            if (someFighter.makeCheck("Wis", "Animal Handling", "", someDice.
-                                      rollD20(abilityRollStatus)) > someEncounter.tameDc) {
-              // They did it.
-              System.out.println("\u001B[32m- " + someFighter.name
-                                 + " successfully tamed the "
-                                 + encounter + "s -\u001B[0m");
-              return "Got away";
-
-            } else {
-              // They didn't do it.
-              System.out.println("\u001B[31m- " + someFighter.name + " failed "
-                                 + "to tame the " + encounter
-                                 + "s -\u001B[0m");
-              actionNumber++;
-            }
-
-          // Persuade ---------------------------------------------------------
-          } else if (playerChoice.equals("3") && someEncounter.enemyType.equals("Humanoid")) {
-            // Making the check to see if they've succeeded.
-            if (someFighter.makeCheck("Cha", "Persuasion", "", someDice.
-                                      rollD20(abilityRollStatus))
-                                      > someEncounter.persuadeDc) {
-              // They did it.
-              System.out.println("\u001B[32m- " + someFighter.name
-                                 + " successfully persuaded the " + encounter
-                                 + "s to leave -\u001B[0m");
-              return "Got away";
-
-            } else {
-              // They didn't do it.
-              System.out.println("\u001B[31m- " + someFighter.name + " failed "
-                                 + "to persuade the " + encounter
-                                 + "s to leave -\u001B[0m");
-              actionNumber++;
-            }
- 
-          // Return -----------------------------------------------------------
-          } else if (playerChoice.equals("R") || playerChoice.equals("r")) {
-            System.out.println("");
-
-          // Invalid ----------------------------------------------------------
-          } else {
-            System.out.println("\u001B[31mX Not an option X\u001B[0m");
-            // Waiting to make sure that they see the text.
-            wait(1000);
-          }
-
-        // Option 2: Attacking ------------------------------------------------
-        } else if (playerChoice.equals("2")) {
-          // Clearing the screen.
-          clearScreen();
-          // Printing out info on the current character.
-          System.out.println(someFighter.getCharacterInfo());
-          System.out.println(someFighter.showWeapons());
-
-          // If they dont have any weapons on them:
-          if (someFighter.showWeapons().equals(someFighter.name + " is not "
-                                               + "carrying any weapons at the "
-                                               + "moment")) {
-            // Waiting to make sure that they see the text.
-            wait(1000);
-
-          // If they do have any weapons on them:
-          } else {
-            // Asking them which weapon they would like to use.
-            System.out.println("Which weapon would you like to attack with?");
-            // Getting which weapon they would like to use.
-            weaponNumber = scanChoice.nextLine();
-            // Making sure that their choice is numeric.
-            if (isNumeric(weaponNumber)) {
-              // Finding the weapon in their equipment.
-              foundWeapon = someFighter.findWeapon(Integer.parseInt(weaponNumber));
-
-              // If it couldn't find the weapon the chose.
-              if (foundWeapon.equals("Couldn't find weapon")) {
-                System.out.println("\u001B[31mX Couldn't find that weapon "
-                                   + "X\u001B[0m");
-                // Waiting to make sure that they see the text.
-                wait(1000);
-
-              // If it did find the weapon.
-              } else {
-                // Attack rolls -----------------------------------------------
-                // Telling the player that they made an attack.
-                System.out.println("");
-                System.out.println(someFighter.name + " made an attack with "
-                                   + "their " + foundWeapon + "!");
-                // Making the initial attack roll.
-                attackRoll = someDice.rollD20(attackRollStatus);
-                // Adding the player's modifiers
-                finalValue = someFighter.
-                             makeAttackRoll(attackRoll, someAttack.
-                             attackProperty1(foundWeapon), someAttack.
-                             attackProperty2(foundWeapon));
-                System.out.println("");
-                // Telling the player what the character rolled.
-                System.out.println(someFighter.name + " rolled a " + finalValue
-                                   + " to hit.");
-
-                // If it hits:
-                if (finalValue > someEncounter.enemyAc) {
-                  if (attackRoll == 20) {
-                    System.out.println("");
-                    System.out.println("---------------");
-                    System.out.println("\033[0;93m CRITICAL HIT! \u001B[0m");
-                    System.out.println("---------------");
-                  }
-                  // Damage rolls ---------------------------------------------
-                  // Getting how much damage the player did.
-                  damage = someAttack.makeAttack(someFighter.strength,
-                                                 someFighter.dexterity,
-                                                 foundWeapon, attackRoll,
-                                                 someFighter.fightingStyle, 
-                                                 someFighter.proficiencyBonus);
-                  // Fighting style (Dueling) ---------------------------------
-                  if (someAttack.attackProperty1(foundWeapon).
-                      equals("Two-Handed")
-                      || someAttack.attackProperty2(foundWeapon).
-                      equals("Ranged")
-                      && someFighter.fightingStyle.equals("Dueling")) {
-                    System.out.print("");
-                  } else if (someFighter.fightingStyle.equals("Dueling")) {
-                    damage += 2;
-                  }
-                  // Damage ---------------------------------------------------
-                  System.out.println("");
-                  System.out.println("\u001B[32m" + someFighter.name
-                                     + " dealt " + damage
-                                     + " damage!\u001B[0m");
-                  someEncounter.enemyHealth -= damage;
-
-                  // Keeping track of how many enemies were killed.
-                  enemiesKilled = 0;
-
-                  // Kills ----------------------------------------------------
-                  // Counting how many enemies were killed.
-                  while (true) {
-                    if (someEncounter.enemyHealth < someEncounter.healthOfOne * (someEncounter.numberOfEnemies - 1)) {
-                      enemiesKilled++;
-                      someEncounter.numberOfEnemies--;
-                    } else {
-                      break;
-                    }
-                  }
-
-                  // If the player killed any enemies
-                  if (enemiesKilled > 0) {
-                    System.out.println("");
-                    System.out.println(someFighter.name + " killed "
-                                       + enemiesKilled + " " + encounter);
-                  }
-
-                  actionNumber++;
-                // Misses -----------------------------------------------------
-                // Else if it misses:
-                } else {
-                  System.out.println("");
-                  System.out.println("\u001B[31mX " + someFighter.name +
-                                     " missed " + encounter + " X\u001B[0m");
-                  actionNumber++;
-                }
-              }
-
-            // If they chose an invalid option:
-            } else {
-              System.out.println("\u001B[31mX Not an option X\u001B[0m");
-              // Waiting to make sure that they see the text.
+        // What they actually did.
+        playerDid = someFighter.makeChoice(playerChoice);
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 1: Running away.
+        if (playerDid.equals("Run")) {
+          if (someFighter.canRun) {
+            // Clearing the screen.
+            clearScreen();
+            // Resetting playerchoice.
+            playerChoice = "-1";
+            // Printing out info on the current character.
+            System.out.println(someFighter.getCharacterInfo());
+            // Asking the player how they wish to run.
+            System.out.println("How do you want to do this?");
+            // Printing out their options.
+            System.out.println(someFighter.run(someEncounter.enemyType,
+                                               someEncounter.runDc,
+                                               someEncounter.intimidateDc,
+                                               someEncounter.persuadeDc,
+                                               someEncounter.tameDc, encounter,
+                                               "-1"));
+            // Getting their choice.
+            playerChoice = scanChoice.nextLine();
+            // Determining if they escaped or not.
+            escapeStatus = someFighter.run(someEncounter.enemyType,
+                                           someEncounter.runDc,
+                                           someEncounter.intimidateDc,
+                                           someEncounter.persuadeDc,
+                                           someEncounter.tameDc, encounter,
+                                           playerChoice);
+            // Successfully escaped.
+            if (escapeStatus.equals("Succsess")) {
+              System.out.println("\u001B[32m- Got away safely -\u001B[0m");
               wait(1000);
+              return "None";
+            // Going back to the main menu.
+            } else if (escapeStatus.equals("Back")) {
+              System.out.println("");
+            // Invalid.
+            } else if (escapeStatus.equals("Invalid Input")) {
+              System.out.println(escapeStatus);
+              wait(1000);
+            // Otherwise:
+            } else {
+              System.out.println(escapeStatus);
+              wait(1000);
+              // Increasing the action number and ending their turn.
+              actionNumber++;
             }
+          } else {
+            // Printing out that the player is too tired to run.
+            System.out.println(someFighter.name + " is too tired to run.");
           }
-
-        // Dodge --------------------------------------------------------------
-        } else if (playerChoice.equals("3")) {
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 2: Attack.
+        } else if (playerDid.equals("Attack")) {
+          returnValue = weaponAttack("Action", someFighter, someEncounter,
+                                     someDice, someAttack, encounter);
+          if (returnValue.equals("")) {
+            // Increasing the action number and ending their turn.
+            actionNumber++;
+          } else {
+            System.out.println(returnValue);
+            wait(1000);
+          }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 3: Dodge.
+        } else if (playerDid.equals("Dodge")) {
+          // Telling them that their character dodged.
           System.out.println("\u001B[32mØ " + someFighter.name + " has braced"
                              + " themselves for oncoming attacks Ø\u001B[0m");
-          someFighter.dodge = true;
+          // Increasing the action number and ending their turn.
           actionNumber++;
-          
-        // Nothing ------------------------------------------------------------
-        } else if (playerChoice.equals("4")) {
-          System.out.println(someFighter.name + " did nothing.");
-          actionNumber++;
-
-        // Not an option ------------------------------------------------------
-        } else {
-          System.out.println("\u001B[31mX Not an option X\u001B[0m");
-          // Waiting to make sure that they see the text.
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 4: Action Surge.
+        } else if (playerDid.equals("Action Surge")) {
+          // Telling them that their character action Surged.
+          System.out.println(someFighter.actionSurge());
           wait(1000);
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option N: Doing nothing.
+        } else if (playerDid.equals("Nothing")) {
+          // Printing out that the player didnt do anything.
+          System.out.println(someFighter.name + " did nothing.");
+          // Increasing the action number and ending their turn.
+          actionNumber++;
         }
+        wait(1000);
       }
-      // Waiting to make sure that they see the text.
-      wait(5000);
-      
-      String lastWeapon = foundWeapon;
-      
-  /////////////////////////////////////////////////////////////////////////////
-      
-      // Fighter's Bonus Action -----------------------------------------------
-      while (true) {
+      //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      // Fighter's Bonus Action
+      while (true && someFighter.isUnconcious == false
+             && someFighter.isDead == false) {
         // Clearing the screen.
         clearScreen();
         // Printing out info on the current character.
         System.out.println(someFighter.getCharacterInfo());
-
         // Asking the user what they want their character to do.
         System.out.println("What will " + someFighter.name
                            + " do as a bonus action?");
+        // Showing them their choices.
         System.out.println(someFighter.bonusActions());
+        // getting their choice.
         playerChoice = scanChoice.nextLine();
-        
-        // Second wind --------------------------------------------------------
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 1: Second Wind
         if (playerChoice.equals("1")) {
+          // Telling the user how many hit points they regained.
           System.out.println(someFighter.secondWind(someDice.rollD10()));
+          // Ending their turn.
           break;
-          
-        // Bonus action attack ------------------------------------------------
-        } else if (playerChoice.equals("2")
-                   && someAttack.attackProperty2(lastWeapon).equals("Light")) {
-          // Clearing the screen.
-          clearScreen();
-          // Printing out info on the current character.
-          System.out.println(someFighter.getCharacterInfo());
-          System.out.println(someFighter.showWeapons());
-
-          // If they dont have any weapons on them:
-          if (someFighter.showWeapons().equals(someFighter.name + " is not "
-                                               + "carrying any weapons at the "
-                                               + "moment")) {
-            // Waiting to make sure that they see the text.
-            wait(1000);
-
-          // If they do have any weapons on them:
-          } else {
-            // Asking them which weapon they would like to use.
-            System.out.println("Which weapon would you like to attack with?");
-            // Getting which weapon they would like to use.
-            weaponNumber = scanChoice.nextLine();
-            // Making sure that their choice is numeric.
-            if (isNumeric(weaponNumber)) {
-              // Finding the weapon in their equipment.
-              foundWeapon = someFighter.findWeapon(Integer.parseInt(weaponNumber));
-
-              // If it couldn't find the weapon the chose.
-              if (foundWeapon.equals("Couldn't find weapon")) {
-                System.out.println("\u001B[31mX Couldn't find that weapon "
-                                   + "X\u001B[0m");
-                // Waiting to make sure that they see the text.
-                wait(1000);
-
-              // If it did find the weapon.
-              } else {
-                if (someAttack.attackProperty2(foundWeapon).equals("Light")) {
-                  // Attack rolls -----------------------------------------------
-                  // Telling the player that they made an attack.
-                  System.out.println("");
-                  System.out.println(someFighter.name + " made an attack with "
-                                     + "their " + foundWeapon + "!");
-                  // Making the initial attack roll.
-                  attackRoll = someDice.rollD20(attackRollStatus);
-                  // Adding the player's modifiers
-                  finalValue = someFighter.
-                               makeAttackRoll(attackRoll, someAttack.
-                               attackProperty1(foundWeapon), someAttack.
-                               attackProperty2(foundWeapon));
-                  System.out.println("");
-                  // Telling the player what the character rolled.
-                  System.out.println(someFighter.name + " rolled a " + finalValue
-                                     + " to hit.");
-
-                  // If it hits:
-                  if (finalValue > someEncounter.enemyAc) {
-                    if (attackRoll == 20) {
-                      System.out.println("");
-                      System.out.println("---------------");
-                      System.out.println("\033[0;93m CRITICAL HIT! \u001B[0m");
-                      System.out.println("---------------");
-                    }
-                    // Damage rolls ---------------------------------------------
-                    // Getting how much damage the player did.
-                    damage = someAttack.makeAttack(someFighter.strength,
-                                                   someFighter.dexterity,
-                                                   foundWeapon, attackRoll,
-                                                   someFighter.fightingStyle, 
-                                                   someFighter.proficiencyBonus);
-                    // Fighting style (Dueling) ---------------------------------
-                    if (someFighter.fightingStyle.equals("Two-Weapon Fighting")) {
-                      System.out.print("");
-                    } else if (someAttack.attackProperty1(foundWeapon).
-                               equals("Finesse")) {
-                      damage -= (((someFighter.dexterity
-                                   - someFighter.dexterity % 2) - 10) / 2);
-                    } else {
-                      damage -= (((someFighter.strength
-                                   - someFighter.strength % 2) - 10) / 2);
-                    }
-                    // Damage ---------------------------------------------------
-                    System.out.println("");
-                    System.out.println("\u001B[32m" + someFighter.name
-                                       + " dealt " + damage
-                                       + " damage!\u001B[0m");
-                    someEncounter.enemyHealth -= damage;
-                    someFighter.hasShieldEquiped = false;
-
-                    // Keeping track of how many enemies were killed.
-                    enemiesKilled = 0;
-
-                    // Kills --------------------------------------------------
-                    // Counting how many enemies were killed.
-                    while (true) {
-                      if (someEncounter.enemyHealth < someEncounter.healthOfOne * (someEncounter.numberOfEnemies - 1)) {
-                        enemiesKilled++;
-                        someEncounter.numberOfEnemies--;
-                      } else {
-                        break;
-                      }
-                    }
-
-                    // If the player killed any enemies
-                    if (enemiesKilled > 0) {
-                      System.out.println("");
-                      System.out.println(someFighter.name + " killed "
-                                         + enemiesKilled + " " + encounter);
-                    }
-
-                    break;
-                  // Misses ---------------------------------------------------
-                  // Else if it misses:
-                  } else {
-                    System.out.println("");
-                    System.out.println("\u001B[31mX " + someFighter.name +
-                                     " missed " + encounter + " X\u001B[0m");
-                    break;
-                  }
-                } else {
-                  System.out.println("\u001B[31mX " + someFighter.name
-                                     + " cannot make an attack on their bonus "
-                                     + "action with a wapon that isn't light "
-                                     + "X\u001B[0m");
-                  // Waiting to make sure that they see the text.
-                  wait(1000);
-                }
-              }
-
-            // If they chose an invalid option:
-            } else {
-              System.out.println("\u001B[31mX Not an option X\u001B[0m");
-              // Waiting to make sure that they see the text.
-              wait(1000);
-            }
-          }
- 
-        // Bonus action attack else -------------------------------------------
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Option 2: Attack.
         } else if (playerChoice.equals("2")) {
-          System.out.println("\u001B[31mX " + someFighter.name + " cannot do "
-                             + "that, they didn't use a light weapon for their"
-                             + " first attack X\u001B[0m");
-          // Waiting to make sure that they see the text.
-          wait(1000);
-
-        // Nothing ------------------------------------------------------------
-        } else if (playerChoice.equals("3")) {
+          returnValue = weaponAttack("Bonus Action", someFighter, someEncounter,
+                                     someDice, someAttack, encounter);
+          if (returnValue.equals("")) {
+            // Increasing the action number and ending their turn.
+            break;
+          } else {
+            System.out.println(returnValue);
+            wait(1000);
+          }
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Nothing
+        } else if (playerChoice.equals("N") || playerChoice.equals("n")) {
           System.out.println(someFighter.name + " did nothing for their bonus " 
                              + "action.");
           break;
-        // Invalid ------------------------------------------------------------
+        //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+        // Invalid
         } else {
           System.out.println("\u001B[31mX Not an option X\u001B[0m");
           // Waiting to make sure that they see the text.
           wait(1000);
         }
       }
-      
-      // Shield ---------------------------------------------------------------
-      if (someFighter.hasShieldEquiped && someFighter.hasShield
-          && someFighter.currentArmorClass == someFighter.armorClass) {
-        someFighter.currentArmorClass += 2;
-        System.out.println("\u001B[32mØ " + someFighter.name + " has put up"
-                             + " their shield! Ø\u001B[0m");
-      } else if (someFighter.currentArmorClass != someFighter.armorClass) {
-        someFighter.currentArmorClass = someFighter.armorClass;
+      //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      // Death Saves
+      if (someFighter.isUnconcious && someFighter.isDead == false
+          && someFighter.currentHitPoints <=0) {
+        clearScreen();
+        deathSaveRoll = someDice.rollD20("");
+        System.out.println(someFighter.getCharacterInfo());
+        if (deathSaveRoll >= 10) {
+          System.out.println(someFighter.name + " is hanging in there!");
+          someFighter.deathSaveSuccess++;
+          wait(1000);
+        } else {
+          System.out.println(someFighter.name + " is in a critical condition!");
+          someFighter.deathSaveFailure++;
+          wait(1000);
+        }
       }
-      // Waiting to make sure that they see the text.
-      
-      // Fighting Style (Defense) ---------------------------------------------
-      if (someFighter.fightingStyle.equals("Defense")) {
-        if (someFighter.hasShieldEquiped && someFighter.hasShield) {
-          if (someFighter.currentArmorClass == someFighter.armorClass + 2) {
-            someFighter.currentArmorClass += 1;
-          }
-        } else if (someFighter.currentArmorClass == someFighter.armorClass) {
+      if (someFighter.deathSaveFailure >= 3 && someFighter.isDead == false) {
+        someFighter.isDead = true;
+        System.out.println("\u001B[31m☠ " + someFighter.name 
+                           + " has died ☠\u001B[0m");
+        wait(1000);
+        return "Dead";
+      }
+      if (someFighter.deathSaveSuccess >= 3 && someFighter.isDead == false
+          && someFighter.isUnconcious == true) {
+        System.out.println(someFighter.name + " has held on to life!");
+        someFighter.currentHitPoints = 1;
+        wait(1000);
+      }
+      someFighter.currentArmorClass = someFighter.armorClass;
+      //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      // Shield
+      // Checking if the character has the shield bonus already.
+      if (someFighter.hasShieldEquiped && someFighter.hasShield) {
+        someFighter.currentArmorClass += 2;
+        if (someFighter.fightingStyle.equals("Defense")) {
           someFighter.currentArmorClass += 1;
         }
       }
-
-      // Fighting Style (Protection) ------------------------------------------
+      //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+      // Fighting Style (Protection)
       if (someFighter.fightingStyle.equals("Protection")) {
         someFighter.isProtectionReady = true;
       }
-
       wait(4000);
-
+      if (someEncounter.enemyHealth <= 0) {
+        break;
+      }
       //-----------------------------------------------------------------------
       // Enemy's Turn.
       // Clearing the screen.
@@ -622,38 +464,38 @@ public class Main {
       System.out.println("\u001B[31m- " + encounter + "'s turn -\u001B[0m");
       // Waiting to make sure that they see the text.
       // For every enemy in the encounter.
-      for (int enemyNumber = 0; enemyNumber < someEncounter.numberOfEnemies; enemyNumber++) {
-        for (int attackNumber = 0; attackNumber < someEncounter.numberOfAttacks; attackNumber++) {
+      for (int enemyNumber = 0; enemyNumber <= someEncounter.numberOfEnemies;
+           enemyNumber++) {
+        // For every attack the enemy has.
+        for (int attackNumber = 0; attackNumber < someEncounter.numberOfAttacks;
+             attackNumber++) {
           wait(1000);
           // Attacking ----------------------------------------------------------
           System.out.println(encounter + " " + (enemyNumber + 1) + " attacks "
-                           + someFighter.name);
+                             + someFighter.name);
           // Setting the attack roll status to neutral.
           attackRollStatus = "";
-
           // If the player decided to dodge:
-          if (someFighter.dodge) {
+          if ((someFighter.fightingStyle.equals("Protection") && someFighter.
+               isProtectionReady) || someFighter.dodge) {
             // Setting the attack roll status to disadvantage.
-            attackRollStatus = "Disadvantage";
-          }
-        
-          // Fighting Style (Protection) ----------------------------------------
-          if (someFighter.fightingStyle.equals("Protection")
-              && someFighter.isProtectionReady) {
             attackRollStatus = "Disadvantage";
             someFighter.isProtectionReady = false;
           }
-
           // Attack roll --------------------------------------------------------
-          int enemyAttackRoll = someEncounter.enemyAttack(encounter, "Attack Roll",
-                                                          attackRollStatus, (attackNumber + 1));
+          int enemyAttackRoll = someEncounter.enemyAttack(encounter,
+                                                          "Attack Roll",
+                                                          attackRollStatus,
+                                                          (attackNumber + 1));
           // Checking to see if it hit.
-          if (enemyAttackRoll > someFighter.currentArmorClass) {
+          if (enemyAttackRoll > someFighter.currentArmorClass
+              && someFighter.isUnconcious == false) {
             // Damage roll ----------------------------------------------------
             // If they hit:
             // Getting the damage dealt.
             damage = someEncounter.enemyAttack(encounter, "Damage Roll",
-                                               attackRollStatus, (attackNumber + 1));
+                                               attackRollStatus,
+                                               (attackNumber + 1));
             // Applying the damage.
             someFighter.currentHitPoints -= damage;
             // Telling the player how much damage they took.
@@ -666,15 +508,13 @@ public class Main {
               wait(1000);
               // Telling the user that their character has died.
               if (someFighter.name.equals("Bobby")) {
-                System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
-                System.out.println("[Press ENTER to continue]");
-                enter = scanForEnter.nextLine();
-                return "dead";
+                System.out.println("\u001B[31m☠ " + someFighter.name 
+                                   + " did what he had to do ☠\u001B[0m");
+              } else {
+                System.out.println("\u001B[31m☠ " + someFighter.name 
+                                   + " has fallen ☠\u001B[0m");
               }
-              System.out.println("\u001B[31m☠ " + someFighter.name + " has died ☠\u001B[0m");
-              System.out.println("[Press ENTER to continue]");
-              enter = scanForEnter.nextLine();
-              return "dead";
+              someFighter.isUnconcious = true;
             }
           // Otherise if the enemy missed:
           } else {
@@ -683,17 +523,32 @@ public class Main {
                                + someFighter.name + "!\u001B[0m");
           }
         }
-        wait(1000);
+      }
+      if (someFighter.currentHitPoints >= 1 && someFighter.isUnconcious) {
+        break;
       }
     }
+    if (someFighter.currentHitPoints >= 1 && someFighter.isUnconcious) {
+      clearScreen();
+      System.out.println("The " + encounter + " decided to leave you alone");
+      wait(5000);
+      return "0";
+    }
+    
+    // End of battle ----------------------------------------------------------
     clearScreen();
-    System.out.println("\u001B[32m The party defeated the " + encounter + "s!\u001B[0m");
-    System.out.println("\u001B[32m Everyone gained " + (someEncounter.expForOne * startingEnemies / 1)+ "exp!\u001B[0m");
+    System.out.println("\u001B[32m The party defeated the " + encounter
+                       + "s!\u001B[0m");
+    System.out.println("\u001B[32m Everyone gained " + (someEncounter.expForOne
+                                                        * startingEnemies / 1)
+                                                        + "exp!\u001B[0m");
+    someFighter.experiencePoints += someEncounter.expForOne * startingEnemies
+                                    / 1;
     wait(5000);
     return "0";
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
   
   public static String dailyProcedure(ChultMap someMap, Weather someWeather,
                                       Dice someDice, Fighter someFighter,
@@ -836,8 +691,9 @@ public class Main {
     //Checking for encounters.
     String encounter = someMap.rollEncounter(someDice.rollD20(""),
                                              someDice.rollD100());
-    String end = runEncounter(encounter, someWeather, someDice, someFighter, someAttack, someEncounter);
-    if (end.equals("dead")) {
+    String end = runEncounter(encounter, someWeather, someDice, someFighter,
+                              someAttack, someEncounter);
+    if (end.equals("Dead")) {
       clearScreen();
       return ("- GAME OVER -");
     }
@@ -932,6 +788,8 @@ public class Main {
     // Regaining hp.
     someFighter.currentHitPoints = someFighter.maxHitPoints;
     someFighter.isSecondWindReady = true;
+    someFighter.isActionSurgeReady = true;
+    System.out.println(someFighter.levelUp());
 
     // Waiting for enter.
     System.out.println("[Press ENTER to continue]");
@@ -941,7 +799,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
   
   public static void clearScreen() {
     //-------------------------------------------------------------------------
@@ -951,7 +809,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
   
   public static boolean isNumeric(String str) {
     //-------------------------------------------------------------------------
@@ -966,33 +824,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-  /////////////////////////////////////////////////////////////////////////////
-
-  public enum FighterSkills {
-    //-------------------------------------------------------------------------
-    // List of fighter skills.
-    Skill1("Acrobatics"),
-    Skill2("Animal Handling"),
-    Skill3("History"),
-    Skill4("Insight"),
-    Skill5("Perception"),
-    Skill6("Survival");
-    
-    // Returning the value.
-    private final String skill;
-
-    FighterSkills(String skill) {
-      this.skill = skill;
-    }
-
-    public String getSkill() {
-      return this.skill;
-    }
-    
-    //-------------------------------------------------------------------------
-  }
-  
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
   public enum MartialWeaponNames {
     //-------------------------------------------------------------------------
@@ -1034,7 +866,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
   public enum MartialWeaponWeights {
     //-------------------------------------------------------------------------
@@ -1076,7 +908,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
   
   public static void createFighter(Fighter someFighter, String hasPlayed) {
     //-------------------------------------------------------------------------
@@ -1110,82 +942,6 @@ public class Main {
     // Clearing the screen.
     clearScreen();
 
-    //-------------------------------------------------------------------------
-    // Setting their skills.
-
-    // Title
-    System.out.println("                    - Skills -");
-    System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-    
-    // Giving the player a short definition of what skills are if they havent
-    // played before.
-    if (hasPlayed.equals("1")) {
-      System.out.print("");
-    } else {
-      System.out.println("Each character you make will have proficiency in a ");
-      System.out.println("set of skills according to their class. You can still");
-      System.out.println("use skills you don't have proficiency in, however,");
-      System.out.println("you will be able to add your proficiency bonus to");
-      System.out.println("those which you do, which is +2 to start.");
-      System.out.println("");
-    }
-
-    // Allowing the player to choose which skills they want their fighter
-    // to have.
-    System.out.println("Which 2 of the following skills would you like "
-                       + someFighter.name + " to have?");
-    System.out.println("[1 = Acrobatics] [2 = Animal Handling] [3 = History]");
-    System.out.println("    [4 = Insight] [5 = Perception] [6 = Survival]");
-    System.out.println("");
-    
-    // Number of chosen skills and last picked skill.
-    int numberOfSkills = 1;
-    int pickedSkill = 0;
-    
-    //Making sure that the player chooses 2 valid options.
-    while (true) {
-      System.out.println("Choice #" + numberOfSkills);
-      String chosenSkillString = scanFighter.nextLine();
-
-      // Making sure that the user inputs a valid option.
-      if (isNumeric(chosenSkillString)) {
-        // Converting it to an int.
-        int chosenSkill = Integer.parseInt(chosenSkillString);
-        // Making sure it is in the range.
-        if (chosenSkill >= 1 && chosenSkill <= 6) {
-          // Getting the skill from the enum.
-          FighterSkills s = FighterSkills.valueOf("Skill" + chosenSkill);
-          // Adding the skill to the fighter's proficiencies.
-          someFighter.proficiencies.add(s.getSkill());
-          // Making the number of picked skills increase.
-          numberOfSkills++;
-          // Remembering the last picked skill so they can pick it twice.
-          pickedSkill = chosenSkill;
-        } else {
-          System.out.println("\u001B[31mYou cannot pick that number.\u001B[0m");
-        }
-
-      // Implementing the choice.
-      } else {
-        System.out.println("\u001B[31mYou cannot pick that number.\u001B[0m");
-      }
-      
-      if (numberOfSkills > 2) {
-        System.out.println("");
-        //telling them the skills that they've chosen.
-        System.out.println("You Picked: " + someFighter.proficiencies.
-                                            get(someFighter.proficiencies.size()
-                                                - 2) + " and " + someFighter.
-                                            proficiencies.get(someFighter.
-                                                              proficiencies.
-                                                              size() - 1));
-        // Looking for enter to continue.
-        System.out.println("[Press ENTER to continue]");
-        String enter = scanForEnter.nextLine();
-        clearScreen();
-        break;
-      }
-    }
     //-------------------------------------------------------------------------
     // Equipment
     
@@ -1440,13 +1196,18 @@ public class Main {
         System.out.println("\u001B[31mThat is not an option.\u001B[0m");
       }
     }
-    
 
+    // Clearing the screen.
+    clearScreen();
+    System.out.println(someFighter.levelUp());
+    if (someFighter.level > 1) {
+      wait(1000);
+    }
     // Clearing the screen.
     clearScreen();
   }
   
-  /////////////////////////////////////////////////////////////////////////////
+//=============================================================================
 
   /**
    * This function handles the input and output of the program.

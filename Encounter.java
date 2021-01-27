@@ -8,13 +8,12 @@
 */
 
 import java.util.Random; // Import the random number class
-
 //=============================================================================
 
 public class Encounter {
 
+//=============================================================================
   // Variables --------------------------------------------------------------
-
   // Amount of exp gained for killing one:
   public int expForOne = 0;
   // Number of attacks the enemy has (default = 1):
@@ -36,9 +35,10 @@ public class Encounter {
   public int tameDc = 0; // Trying to take them.
   // Roll to see what zombie encounter they get.
   private int zombieRoll = 0;
-
 //=============================================================================
-
+  /**
+   * Replicates rolling a D20.
+   */
   private int rollD20(String rollWith) {
     // 2 Rolls.
     int roll1 = (int) (Math.random() * 20 + 1);
@@ -60,9 +60,10 @@ public class Encounter {
       return roll1;
     }
   }
-
 //=============================================================================
-
+  /**
+   * Getting the encounter type.
+   */
   public String getEncounterType(String encounter) {
     // Getting what type of encounter it is:
     if (encounter.equals("Almiraj") || encounter.equals("Chwinga")
@@ -93,129 +94,105 @@ public class Encounter {
       return "Hostile";
     }
   }
-
 //=============================================================================
-
+  /**
+   * Setting the encounter stats.
+   */
   public String setEncounterStats(String encounter) {
     // Initializing the encounter statistics:
-    
     //=========================================================================
     // Friendly Encounters:
-    
     // Aarakocra --------------------------------------------------------------
     if (encounter.equals("Aarakocra")) {
       numberOfEnemies = (int) (Math.random() * 4 + 1) + 1;
       return "- The Party notices " + numberOfEnemies + " half "
              + "bird half man creatures flying over the jungle "
              + "heading west -";
-             
     // Almiraj ----------------------------------------------------------------
     } else if (encounter.equals("Almiraj")) {
       numberOfEnemies = (int) (Math.random() * 6 + 1);
       return "- The Party sees " + numberOfEnemies + " almiraj "
              + " in the distance. - ";
-      
     // Artus Cimber -----------------------------------------------------------
     } else if (encounter.equals("Artus Cimber")) {
       return "None";
-      
     // Cache ------------------------------------------------------------------
     } else if (encounter.equals("Cache")) {
       return "- The Party found a cache of items! -";
-
     // Chwinga ----------------------------------------------------------------
     } else if (encounter.equals("Chwinga")) {
       return "- The party spots a Chwinga stealing something from their packs."
              + " They quickly dissapear into the jungle upon being seen. -";
-      
     // Pteranodon -------------------------------------------------------------
     } else if (encounter.equals("Pteranodon")) {
       numberOfEnemies = (int) (Math.random() * 6 + 1)
                         + (int) (Math.random() * 6 + 1);
       return "- The party spots a flock of " + numberOfEnemies
              + " pteranodons flying through the sky. -";
-      
     // Quetzalcoatlus ---------------------------------------------------------
     } else if (encounter.equals("Quetzalcoatlus")) {
       numberOfEnemies = (int) (Math.random() * 4 + 1) + 1;
       return "- The party spots a flock of " + numberOfEnemies
              + " quetzalcoatluses flying through the sky. -";
-
     // Faerie Dragon ----------------------------------------------------------
     } else if (encounter.equals("Faerie Dragon")) {
       return "- The party spots a small faerie dragon playing in trees. -";
-      
     // Red Dragon -------------------------------------------------------------
     } else if (encounter.equals("Red Dragon")) {
       return "- The party spots a red dragon flying west over Chult. -";
-
     // Emerald Enclave --------------------------------------------------------
     } else if (encounter.equals("Emerald Enclave")) {
       numberOfEnemies = (int) (Math.random() * 4 + 1) + 1;
       return "- The party is greeted by " + numberOfEnemies
              + " members of the Emerald Enclave. -";
-      
     // Dead Explorer ----------------------------------------------------------
     } else if (encounter.equals("Dead Explorer")) {
       return "- The party finds the body of a dead explorer. - ";
-      
     // Explorer ---------------------------------------------------------------
     } else if (encounter.equals("Explorer")) {
       numberOfEnemies = (int) (Math.random() * 4 + 1) + 1;
       return "- The party is greeted by a party of " + numberOfEnemies
              + " explorers. -";
-      
     // Flaming Fist -----------------------------------------------------------
     } else if (encounter.equals("Flaming Fist")) {
       numberOfEnemies = (int) (Math.random() * 6 + 1)
                         + (int) (Math.random() * 6 + 1);
       return "- The party is greeted by a patrol of " + numberOfEnemies
              + " members of the Flaming Fist. -";
-
     // Mad Monkey Mist --------------------------------------------------------
     } else if (encounter.equals("Mad Monkey Mist")) {
       return "- A bank of blue mist drifts toward the party, covering the " 
              + "imediate area. -";
-
     // Night Hag --------------------------------------------------------------
     } else if (encounter.equals("Night Hag")) {
       return "- The party feels like they've lost some hair and blood. -";
-
     // Rare Plant -------------------------------------------------------------
     } else if (encounter.equals("Rare Plant")) {
       return "- The party finds a rare plant! -";
-
     // Statue of Ubtao --------------------------------------------------------
     } else if (encounter.equals("Statue of Ubtao")) {
       return "- The party finds a statue! -";
-
     // Tabaxi Hunter ----------------------------------------------------------
     } else if (encounter.equals("Tabaxi Hunter")) {
       return "- The party is greeted by a tabaxi hunter. -";
-
     // Wereboar ---------------------------------------------------------------
     } else if (encounter.equals("Wereboar")) {
       return "- The party is greeted by a friendly wereboar. -";
-      
     // Weretiger --------------------------------------------------------------
     } else if (encounter.equals("Weretiger")) {
       return "- The party is greeted by a friendly weretiger. -";
-      
     // Winterscape ------------------------------------------------------------
     } else if (encounter.equals("Winterscape")) {
       return "- The party finds an area 120 foot radius spere of " 
              + "frozen land in the jungle. -";
-
     // Zorbos -----------------------------------------------------------------
     } else if (encounter.equals("Zorbos")) {
       numberOfEnemies = (int) (Math.random() * 4 + 1)
                         + (int) (Math.random() * 4 + 1);
       return "- The party finds spots " + numberOfEnemies
              + " zorbos latched to various trees around you. -";
-
     //=========================================================================
     // Combat Encounters:
-
     // Albino Dwarves ---------------------------------------------------------
     } else if (encounter.equals("Albino Dwarves")) {
       // Stats ----------------------------------------------
@@ -230,10 +207,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-
       return "- The Party is suddenly ambushed by " + numberOfEnemies
              + " Albino Dwaves! -";
-
     // Aldani -----------------------------------------------------------------
     } else if (encounter.equals("Aldani")) {
       // Stats ----------------------------------------------
@@ -248,11 +223,9 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The Party notices that they are being shadowed by "
               + numberOfEnemies + " Aldani (Lobsterfolk). -\n- Eventually, "
               + "they come forward and attack! -";
-
     // Apes -------------------------------------------------------------------
     } else if (encounter.equals("Ape")) {
       // Stats ----------------------------------------------
@@ -268,10 +241,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party are attacked by " + numberOfEnemies + " apes "
              + "enjoying some exelent fruit -";
-
     // Assassin Vine ----------------------------------------------------------
     } else if (encounter.equals("Assassin Vine")) {
       // Stats ----------------------------------------------
@@ -286,10 +257,8 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-
       return "- The party unwittingly enter the hunting grounds of "
              + numberOfEnemies + " assassing vines! -";
-
     // Axe Beak ---------------------------------------------------------------
     } else if (encounter.equals("Axe Beak")) {
       // Stats ----------------------------------------------
@@ -304,10 +273,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is suddenly attack by a flock of " + numberOfEnemies
              + " axe beaks stampeding through the jungle! -";
-
     // Baboons -------------------------------------------------------------------
     } else if (encounter.equals("Baboon")) { 
       // Stats ----------------------------------------------
@@ -324,10 +291,8 @@ public class Encounter {
       expForOne = 10;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-
       return "- A pack of " + numberOfEnemies
              + " baboons take umbrage in the party's intrusion and attack -";
-
     // Cannibal ---------------------------------------------------------------
     } else if (encounter.equals("Cannibal")) {
       // Stats ----------------------------------------------
@@ -344,12 +309,10 @@ public class Encounter {
       expForOne = 25;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party finds a group of " + numberOfEnemies
               + " tribal warriors feasting on the rotting remains "
               + "of a dismembered zombie. -\n- As they turn to face the "
               + "party, they prepare to attack! -";
-
     // Crocodile --------------------------------------------------------------
     } else if (encounter.equals("Crocodile")) {
       // Stats ----------------------------------------------
@@ -364,9 +327,7 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies + " crocodiles! -";
-
     // Cyclops ----------------------------------------------------------------
     } else if (encounter.equals("Cyclops")) {
       // Stats ----------------------------------------------
@@ -381,9 +342,7 @@ public class Encounter {
       expForOne = 2300;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a Cyclops on it's way back home! -";
-
     // Allosaurus -------------------------------------------------------------
     } else if (encounter.equals("Allosaurus")) {
       // Stats ----------------------------------------------
@@ -398,10 +357,8 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party's scent attracts " + numberOfEnemies
              + " allosauruses who attack on sight! -";
-      
     // Ankylosaurus -----------------------------------------------------------
     } else if (encounter.equals("Ankylosaurus")) {
       // Stats ----------------------------------------------
@@ -416,9 +373,7 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party encounters a tame ankylosaurus gorging on plants. -";
-      
     // Brontosaurus -----------------------------------------------------------
     } else if (encounter.equals("Brontosaurus")) {
       // Stats ----------------------------------------------
@@ -433,9 +388,7 @@ public class Encounter {
       expForOne = 1800;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- A tame brontosaurus lumbers toward the part. -";
-      
     // Deinonychus ------------------------------------------------------------
     } else if (encounter.equals("Deinonychus")) {
       // Stats ----------------------------------------------
@@ -450,12 +403,10 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 3;
       // Stats ----------------------------------------------
-      
       return "- A wild boar races past the party's path, followed "
              + "closely by a hunting pack of " + numberOfEnemies
              + " deinonychuses, which decide that you are more "
              + "intersting prey! -";
-
     // Dimetrodon -------------------------------------------------------------
     } else if (encounter.equals("Dimetrodon")) {
       // Stats ----------------------------------------------
@@ -471,10 +422,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a pack of " + numberOfEnemies
              + " hungry dimetrodons! -";
-      
     // Hadrosaurus ------------------------------------------------------------
     } else if (encounter.equals("Hadrosaurus")) {
       // Stats ----------------------------------------------
@@ -491,10 +440,8 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party sees a herd of " + numberOfEnemies
              + " grazing nearby. -";
-      
     // Pleiosaurus ------------------------------------------------------------
     } else if (encounter.equals("Pleiosaurus")) {
       // Stats ----------------------------------------------
@@ -510,10 +457,8 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by 2 plesiosauruses fighting"
              + " over a giant octopus! -";
-      
     // Stegosaurus ------------------------------------------------------------
     } else if (encounter.equals("Stegosaurus")) {
       // Stats ----------------------------------------------
@@ -528,9 +473,7 @@ public class Encounter {
       expForOne = 1100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is approached by a stegosaurus in a genial move -";
-      
     // Triceratops ------------------------------------------------------------
     } else if (encounter.equals("Triceratops")) {
       // Stats ----------------------------------------------
@@ -545,9 +488,7 @@ public class Encounter {
       expForOne = 1800;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is approached by a grazing triceratops -";
-      
     // Tyrannosaurus ----------------------------------------------------------
     } else if (encounter.equals("Tyrannosaurus")) {
       // Stats ----------------------------------------------
@@ -562,14 +503,12 @@ public class Encounter {
       expForOne = 3900;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is suddenly stopped in their tracks by a triceratops"
              + " flying through the air and landing just infornt of them... -"
              + "\n- As the surrounding jungle grows quiet, the loud, "
              + "booming footsteps of a creature come into earshot... -"
              + "\n\u001B[31m- SUDDENLY! A tyrannosaurus rex emerges "
              + "from the trees and attacks the party! -\u001B[0m";
-      
     // Velociraptor -----------------------------------------------------------
     } else if (encounter.equals("Velociraptor")) {
       // Stats ----------------------------------------------
@@ -586,10 +525,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a pack of " + numberOfEnemies
              + " velociraptors! -";
-
     // Elbis ------------------------------------------------------------------
     } else if (encounter.equals("Elbis")) {
       // Stats ----------------------------------------------
@@ -604,10 +541,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party spot multiple reed huts containing "
              + numberOfEnemies + " Elbis. -";
-
     // Firenewt ---------------------------------------------------------------
     } else if (encounter.equals("Firenewt")) {
       // Stats ----------------------------------------------
@@ -622,10 +557,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a patrol of " + numberOfEnemies
              + " firenewt warriors, each riding a giant spider! -";
-      
     // Flail Snail ------------------------------------------------------------
     } else if (encounter.equals("Flail Snail")) {
       // Stats ----------------------------------------------
@@ -639,10 +572,8 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 5;
       // Stats ----------------------------------------------
-      
       return "- The party spots a slimy trail in the jungle. Upon reaching the"
              + "end of the trail, you are attacked by a flail snail! -";
-      
     // Flying Monkey ----------------------------------------------------------
     } else if (encounter.equals("Flying Monkey")) {
       // Stats ----------------------------------------------
@@ -659,10 +590,8 @@ public class Encounter {
       expForOne = 10;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is greated by " + numberOfEnemies
              + " playful flying monkeys. -";
-
     // Flying Snake -----------------------------------------------------------
     } else if (encounter.equals("Flying Snake")) {
       // Stats ----------------------------------------------
@@ -678,7 +607,6 @@ public class Encounter {
       expForOne = 25;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party sees " + numberOfEnemies + " flying"
              + " snakes laying on some tree branches ahead. -";
       
@@ -696,10 +624,8 @@ public class Encounter {
       expForOne = 3900;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party sees a group of " + numberOfEnemies
              + " Frost Giants stomping through the wilderness. -";
-      
     // Giant Boar -------------------------------------------------------------
     } else if (encounter.equals("Giant Boar")) {
       // Stats ----------------------------------------------
@@ -714,10 +640,8 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party sees " + numberOfEnemies + " giant boars"
              + " foraging up ahead. -";
-      
     // Giant Crocodile --------------------------------------------------------
     } else if (encounter.equals("Giant Crocodile")) {
       // Stats ----------------------------------------------
@@ -732,9 +656,7 @@ public class Encounter {
       expForOne = 1800;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a giant crocodile! -";
-      
     // Giant Frog -------------------------------------------------------------
     } else if (encounter.equals("Giant Frog")) {
       // Stats ----------------------------------------------
@@ -750,10 +672,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " hungry giant frogs! -";
-
     // Giant Lizard -----------------------------------------------------------
     } else if (encounter.equals("Giant Lizard")) {
       // Stats ----------------------------------------------
@@ -768,10 +688,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party spots " + numberOfEnemies + " giant "
              + "lizards sunning themselves on warm rocks. -";
-      
     // Giant Scorpion ---------------------------------------------------------
     } else if (encounter.equals("Giant Scorpion")) {
       // Stats ----------------------------------------------
@@ -786,10 +704,8 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 3;
       // Stats ----------------------------------------------
-      
       return "- " + numberOfEnemies + " giant scorpions emerge "
              + "from their hiding places and attack the party. -";
-      
     // Giant Snapping Turtle --------------------------------------------------
     } else if (encounter.equals("Giant Snapping Turtle")) {
       // Stats ----------------------------------------------
@@ -804,10 +720,8 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party spots a giant snapping turtle sunning"
              + " themself on the shore. -";
-
     // Giant Wasp -------------------------------------------------------------
     } else if (encounter.equals("Giant Wasp")) {
       // Stats ----------------------------------------------
@@ -822,11 +736,9 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- A droning sound announces the presence of "
              + numberOfEnemies + " giant wasps which attack the "
              + "party on sight! -";
-      
     // Girallons --------------------------------------------------------------
     } else if (encounter.equals("Girallons")) {
       // Stats ----------------------------------------------
@@ -841,9 +753,7 @@ public class Encounter {
       expForOne = 1100;
       numberOfAttacks = 5;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by 2 girallons sitting atop a rock! -";
-
     // Goblins ----------------------------------------------------------------
     } else if (encounter.equals("Goblin")) {
       // Stats ----------------------------------------------
@@ -859,10 +769,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is ambushed by " + (numberOfEnemies - 1)
               + " goblins lead by a goblin boss! -";
-      
     // Grung ------------------------------------------------------------------
     } else if (encounter.equals("Grung")) {
       // Stats ----------------------------------------------
@@ -878,10 +786,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is ambushed by a hunting party of "
              + numberOfEnemies + " grungs! -";
-      
     // Jaculis ----------------------------------------------------------------
     } else if (encounter.equals("Jaculis")) {
       // Stats ----------------------------------------------
@@ -896,10 +802,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-
       return "- Without warning, " + numberOfEnemies + " jaculis" 
              + " lauch themselves at the party from the trees! -";
-
     // Kamadans ---------------------------------------------------------------
     } else if (encounter.equals("Kamadans")) {
       // Stats ----------------------------------------------
@@ -914,9 +818,7 @@ public class Encounter {
       expForOne = 1100;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is ambushed by " + numberOfEnemies + " kamadans! -";
-      
     // Lizardfolk -------------------------------------------------------------
     } else if (encounter.equals("Lizardfolk")) {
       // Stats ----------------------------------------------
@@ -932,10 +834,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is approached by a party of " + numberOfEnemies
              + " lizardfolk. -";
-
     // Magmin -----------------------------------------------------------------
     } else if (encounter.equals("Magmin")) {
       // Stats ----------------------------------------------
@@ -951,9 +851,7 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is ambushed by " + numberOfEnemies + " magmins! -";
-      
     // Mantrap ----------------------------------------------------------------
     } else if (encounter.equals("Mantrap")) {
       // Stats ----------------------------------------------
@@ -968,10 +866,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party blunders into a patch of " + numberOfEnemies
              + " mantraps! -";
-      
     // Pterafolk --------------------------------------------------------------
     } else if (encounter.equals("Pterafolk")) {
       // Stats ----------------------------------------------
@@ -986,11 +882,9 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 3;
       // Stats ----------------------------------------------
-      
       return "- A group of " + numberOfEnemies + " pterafolk loom "
              + "in the sky over the party. Eventually, they take "
              + "advantage of a distraction to attack the party! -";
-
     // Red Wizard -------------------------------------------------------------
     } else if (encounter.equals("Red Wizard")) {
       // Stats ----------------------------------------------
@@ -1005,10 +899,8 @@ public class Encounter {
       expForOne = 25;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- A group of " + numberOfEnemies + " members of the "
              + "Red Wizards attack the party! -";
-      
     // Sea Hag ----------------------------------------------------------------
     } else if (encounter.equals("Sea Hag")) {
       // Stats ----------------------------------------------
@@ -1024,11 +916,9 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party finds 3 stranded adventurers looking for"
              + " help. However, after getting close to them, they "
              + "reveal themselves as sea hags and attack! -";
-      
     // Shambling Mound --------------------------------------------------------
     } else if (encounter.equals("Shambling Mound")) {
       // Stats ----------------------------------------------
@@ -1043,10 +933,8 @@ public class Encounter {
       expForOne = 1800;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a shambling mound trudging through"
              + " muck! -";
-
     // Constrictor Snake ------------------------------------------------------
     } else if (encounter.equals("Constrictor Snake")) {
       // Stats ----------------------------------------------
@@ -1061,9 +949,7 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a constrictor snake! -";
-      
     // Giant Constrictor Snake ------------------------------------------------
     } else if (encounter.equals("Giant Constrictor Snake")) {
       // Stats ----------------------------------------------
@@ -1079,9 +965,7 @@ public class Encounter {
       expForOne = 450;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a giant constrictor snake! -";
-      
     // Giant Poisonous Snake --------------------------------------------------
     } else if (encounter.equals("Giant Poisonous Snake")) {
       // Stats ----------------------------------------------
@@ -1096,9 +980,7 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a giant poisonous snake! -";
-      
     // Spider -----------------------------------------------------------------
     } else if (encounter.equals("Spider")) {
       // Stats ----------------------------------------------
@@ -1113,10 +995,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " giant spiders! -";
-      
     // Stirge -----------------------------------------------------------------
     } else if (encounter.equals("Stirge")) {
       // Stats ----------------------------------------------
@@ -1132,9 +1012,7 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies + " stirges! -";
-      
     // Su-monster -------------------------------------------------------------
     } else if (encounter.equals("Su-monster")) {
       // Stats ----------------------------------------------
@@ -1149,10 +1027,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " su-monsters! -";
-      
     // Swarm of Bats ----------------------------------------------------------
     } else if (encounter.equals("Swarm of Bats")) {
       // Stats ----------------------------------------------
@@ -1167,10 +1043,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " swarms of bats! -";
-      
     // Swarm of Insects -------------------------------------------------------
     } else if (encounter.equals("Swarm of Insects")) {
       // Stats ----------------------------------------------
@@ -1185,10 +1059,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " swarms of insects! -";
-      
     // Swarm of Quippers ------------------------------------------------------
     } else if (encounter.equals("Swarm of Quippers")) {
       // Stats ----------------------------------------------
@@ -1203,10 +1075,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " swarms of quippers in the water! -";
-      
     // Tiger ------------------------------------------------------------------
     } else if (encounter.equals("Tiger")) {
       // Stats ----------------------------------------------
@@ -1221,9 +1091,7 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a tiger! -";
-      
     // Tri-flower Frond -------------------------------------------------------
     } else if (encounter.equals("Tri-flower Frond")) {
       // Stats ----------------------------------------------
@@ -1238,10 +1106,8 @@ public class Encounter {
       expForOne = 100;
       numberOfAttacks = 3;
       // Stats ----------------------------------------------
-      
       return "- The party wanders into a patch of " + numberOfEnemies
              + " tri-flower fronds! -";
-      
     // Troll ------------------------------------------------------------------
     } else if (encounter.equals("Troll")) {
       // Stats ----------------------------------------------
@@ -1256,9 +1122,7 @@ public class Encounter {
       expForOne = 1800;
       numberOfAttacks = 3;
       // Stats ----------------------------------------------
-      
       return "- A hungry troll attacks the party! -";
-      
     // Ghoul ------------------------------------------------------------------
     } else if (encounter.equals("Ghoul")) {
       // Stats ----------------------------------------------
@@ -1274,10 +1138,8 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a group of " + numberOfEnemies
              + " ghouls! -";
-    
     // Skeleton----------------------------------------------------------------
     } else if (encounter.equals("Skeleton")) {
       // Stats ----------------------------------------------
@@ -1294,10 +1156,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a group of " + numberOfEnemies
              + " skeletons! -";
-      
     // Specter ----------------------------------------------------------------
     } else if (encounter.equals("Specter")) {
       // Stats ----------------------------------------------
@@ -1312,9 +1172,7 @@ public class Encounter {
       expForOne = 200;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a group a specter! -";
-      
     // Wight ------------------------------------------------------------------
     } else if (encounter.equals("Wight")) {
       // Stats ----------------------------------------------
@@ -1329,9 +1187,7 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 2;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by a group a wight! -";
-      
     // Zombie -----------------------------------------------------------------
     } else if (encounter.equals("Zombie")) {
       zombieRoll = (int) (Math.random() * 10 + 1);
@@ -1350,9 +1206,7 @@ public class Encounter {
         expForOne = 50;
         numberOfAttacks = 1;
         // Stats ----------------------------------------------
-        
         return "- The party is attacked by " + numberOfEnemies + " zombies! -";
-
       } else if (zombieRoll == 4 || zombieRoll == 5) {
         // Stats ----------------------------------------------
         numberOfEnemies = 1;
@@ -1366,9 +1220,7 @@ public class Encounter {
         expForOne = 700;
         numberOfAttacks = 1;
         // Stats ----------------------------------------------
-        
         return "- The party is attacked by an ankylosaurus zombie! -";
-        
       } else if (zombieRoll == 6 || zombieRoll == 7) {
         // Stats ----------------------------------------------
         numberOfEnemies = (int) (Math.random() * 4 + 1);
@@ -1382,10 +1234,8 @@ public class Encounter {
         expForOne = 700;
         numberOfAttacks = 5;
         // Stats ----------------------------------------------
-        
         return "- The party is attacked by " + numberOfEnemies
                + " girallon zombies! -";
-        
       }  else if (zombieRoll == 8 || zombieRoll == 9) {
         // Stats ----------------------------------------------
         numberOfEnemies = (int) (Math.random() * 4 + 1);
@@ -1399,10 +1249,8 @@ public class Encounter {
         expForOne = 450;
         numberOfAttacks = 1;
         // Stats ----------------------------------------------
-        
         return "- The party is attacked by " + numberOfEnemies
                + " ogre zombies! -";
-        
       }  else {
         // Stats ----------------------------------------------
         numberOfEnemies = 1;
@@ -1416,10 +1264,8 @@ public class Encounter {
         expForOne = 3900;
         numberOfAttacks = 2;
         // Stats ----------------------------------------------
-        
         return "- The party is suddenly attacked by tyranosaurus zombie! -";
       }
-      
     // Vegepygmie -------------------------------------------------------------
     } else if (encounter.equals("Vegepygmie")) {
       // Stats ----------------------------------------------
@@ -1434,10 +1280,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " vegepygmies! -";
-
     // Yellow Musk Creeper And Zombies ----------------------------------------
     } else if (encounter.equals("Yellow Musk Creeper And Zombies")) {
       // Stats ----------------------------------------------
@@ -1454,10 +1298,8 @@ public class Encounter {
       expForOne = 50;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " zombies made by a yellow musk creature! -";
-      
     // Yuan-ti ----------------------------------------------------------------
     } else if (encounter.equals("Yuan-ti")) {
       // Stats ----------------------------------------------
@@ -1472,9 +1314,7 @@ public class Encounter {
       expForOne = 700;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies + " yuan-ti! -";
-      
     // Zhentarim --------------------------------------------------------------
     } else if (encounter.equals("Zhentarim")) {
       // Stats ----------------------------------------------
@@ -1489,24 +1329,22 @@ public class Encounter {
       expForOne = 25;
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
-      
       return "- The party is attacked by " + numberOfEnemies
              + " members of the Zhentarim! -";
-
     //-------------------------------------------------------------------------
     } else {
       // Returning none if there wasn't an encounter.
       return "None";
     }
   }
-
   //===========================================================================
-
+  /**
+   * Getting the enemies attacks.
+   */
   public int enemyAttack(String encounter, String attackName,
                          String rollStatus, int attackNumber) {
     //-------------------------------------------------------------------------
     // Enemy Attacks.
-
     // Albino Dwarves ---------------------------------------------------------
     if (encounter.equals("Albino Dwarves")) {
       if (attackName.equals("Attack Roll")) {
@@ -1514,7 +1352,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 1;
       }
-      
     // Aldani -----------------------------------------------------------------
     } else if (encounter.equals("Aldani")) {
       if (attackName.equals("Attack Roll")) {
@@ -1522,7 +1359,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 1;
       }
-      
     // Apes -------------------------------------------------------------------
     } else if (encounter.equals("Ape")) {
       if (attackName.equals("Attack Roll")) {
@@ -1530,7 +1366,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 3;
       }
-      
     // Assassin Vine ----------------------------------------------------------
     } else if (encounter.equals("Assassin Vine")) {
       if (attackName.equals("Attack Roll")) {
@@ -1541,7 +1376,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
       }
-      
     // Axe Beak ---------------------------------------------------------------
     } else if (encounter.equals("Axe Beak")) {
       if (attackName.equals("Attack Roll")) {
@@ -1549,7 +1383,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 2;
       }
-      
     // Baboons ----------------------------------------------------------------
     } else if (encounter.equals("Baboon")) {
       if (attackName.equals("Attack Roll")) {
@@ -1557,7 +1390,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1) - 1;
       }
-      
     // Cannibal ---------------------------------------------------------------
     } else if (encounter.equals("Cannibal")) {
       if (attackName.equals("Attack Roll")) {
@@ -1565,7 +1397,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 1;
       }
-      
     // Crocodile --------------------------------------------------------------
     } else if (encounter.equals("Crocodile")) {
       if (attackName.equals("Attack Roll")) {
@@ -1573,7 +1404,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 10 + 1) + 2;
       }
-      
     // Cyclops ----------------------------------------------------------------
     } else if (encounter.equals("Cyclops")) {
       if (attackName.equals("Attack Roll")) {
@@ -1582,7 +1412,6 @@ public class Encounter {
         return (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + (int) (Math.random() * 8 + 1) + 6;
       }
-      
     // Allosaurus -------------------------------------------------------------
     } else if (encounter.equals("Allosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1591,7 +1420,6 @@ public class Encounter {
         return (int) (Math.random() * 10 + 1) + (int) (Math.random() * 10 + 1)
                + 6;
       }
-      
     // Ankylosaurus -----------------------------------------------------------
     } else if (encounter.equals("Ankylosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1601,7 +1429,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 4;
       }
-
     // Brontosaurus -----------------------------------------------------------
     } else if (encounter.equals("Brontosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1612,7 +1439,6 @@ public class Encounter {
                + (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + 5;
       }
-      
     // Deinonychus ------------------------------------------------------------
     } else if (encounter.equals("Deinonychus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1620,7 +1446,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 2;
       }
-      
     // Dimetrodon -------------------------------------------------------------
     } else if (encounter.equals("Dimetrodon")) {
       if (attackName.equals("Attack Roll")) {
@@ -1629,7 +1454,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 2;
       }
-      
     // Hadrosaurus ------------------------------------------------------------
     } else if (encounter.equals("Hadrosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1637,7 +1461,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 10 + 1) + 2;
       }
-      
     // Pleiosaurus ------------------------------------------------------------
     } else if (encounter.equals("Pleiosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1646,7 +1469,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + (int) (Math.random() * 6 + 1) + 4;
       }
-      
     // Stegosaurus ------------------------------------------------------------
     } else if (encounter.equals("Stegosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1657,7 +1479,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 5;
       }
-      
     // Triceratops ------------------------------------------------------------
     } else if (encounter.equals("Triceratops")) {
       if (attackName.equals("Attack Roll")) {
@@ -1667,7 +1488,6 @@ public class Encounter {
                + (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + 6;
       }
-      
     // Tyrannosaurus ----------------------------------------------------------
     } else if (encounter.equals("Tyrannosaurus")) {
       if (attackName.equals("Attack Roll")) {
@@ -1682,7 +1502,6 @@ public class Encounter {
                  + (int) (Math.random() * 8 + 1) + 7;
         }
       }
-      
     // Velociraptor -----------------------------------------------------------
     } else if (encounter.equals("Velociraptor")) {
       if (attackName.equals("Attack Roll")) {
@@ -1694,7 +1513,6 @@ public class Encounter {
           return (int) (Math.random() * 4 + 1) + 2;
         }
       }
-
     // Elbis ------------------------------------------------------------------
     } else if (encounter.equals("Elbis")) {
       if (attackName.equals("Attack Roll")) {
@@ -1702,7 +1520,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1) + 3;
       }
-
     // Firenewt ---------------------------------------------------------------
     } else if (encounter.equals("Firenewt")) {
       if (attackName.equals("Attack Roll")) {
@@ -1710,7 +1527,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 1;
       }
-      
     // Flail Snail ------------------------------------------------------------
     } else if (encounter.equals("Flail Snail")) {
       if (attackName.equals("Attack Roll")) {
@@ -1718,7 +1534,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 3;
       }
-      
     // Flying Monkey ----------------------------------------------------------
     } else if (encounter.equals("Flying Monkey")) {
       if (attackName.equals("Attack Roll")) {
@@ -1726,7 +1541,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1) - 3;
       }
-      
     // Flying Snake -----------------------------------------------------------
     } else if (encounter.equals("Flying Snake")) {
       if (attackName.equals("Attack Roll")) {
@@ -1735,7 +1549,6 @@ public class Encounter {
         return (int) (Math.random() * 4 + 1) + (int) (Math.random() * 4 + 1)
                + (int) (Math.random() * 4 + 1) + 1;
       }
-      
     // Frost Giant ------------------------------------------------------------
     } else if (encounter.equals("Frost Giant")) {
       if (attackName.equals("Attack Roll")) {
@@ -1744,7 +1557,6 @@ public class Encounter {
         return (int) (Math.random() * 12 + 1) + (int) (Math.random() * 12 + 1)
                + (int) (Math.random() * 12 + 1) + 6;
       }
-      
     // Giant Boar -------------------------------------------------------------
     } else if (encounter.equals("Giant Boar")) {
       if (attackName.equals("Attack Roll")) {
@@ -1753,7 +1565,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 3;
       }
-      
     // Giant Crocodile --------------------------------------------------------
     } else if (encounter.equals("Giant Crocodile")) {
       if (attackName.equals("Attack Roll")) {
@@ -1768,7 +1579,6 @@ public class Encounter {
                  + 5;
         }
       }
-
     // Giant Frog -------------------------------------------------------------
     } else if (encounter.equals("Giant Frog")) {
       if (attackName.equals("Attack Roll")) {
@@ -1776,7 +1586,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 1;
       }
-      
     // Giant Lizard -----------------------------------------------------------
     } else if (encounter.equals("Giant Frog")) {
       if (attackName.equals("Attack Roll")) {
@@ -1784,7 +1593,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 2;
       }
-      
     // Giant Scorpion ---------------------------------------------------------
     } else if (encounter.equals("Giant Scorpion")) {
       if (attackName.equals("Attack Roll")) {
@@ -1798,7 +1606,6 @@ public class Encounter {
                  + (int) (Math.random() * 10 + 1) + 2;
         }
       }
-      
     // Giant Snapping Turtle --------------------------------------------------
     } else if (encounter.equals("Giant Snapping Turtle")) {
       if (attackName.equals("Attack Roll")) {
@@ -1808,7 +1615,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 4;
       }
-      
     // Giant Wasp -------------------------------------------------------------
     } else if (encounter.equals("Giant Wasp")) {
       if (attackName.equals("Attack Roll")) {
@@ -1818,7 +1624,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 2;
       }
-      
     // Girallons --------------------------------------------------------------
     } else if (encounter.equals("Girallons")) {
       if (attackName.equals("Attack Roll")) {
@@ -1826,7 +1631,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 4;
       }
-
     // Goblins ----------------------------------------------------------------
     } else if (encounter.equals("Goblin")) {
       if (attackName.equals("Attack Roll")) {
@@ -1834,7 +1638,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 2;
       }
-    
     // Grung ------------------------------------------------------------------
     } else if (encounter.equals("Grung")) {
       if (attackName.equals("Attack Roll")) {
@@ -1843,7 +1646,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 4 + 1)
                + (int) (Math.random() * 4 + 1) + 3;
       }
-      
     // Jaculis ----------------------------------------------------------------
     } else if (encounter.equals("Jaculis")) {
       if (attackName.equals("Attack Roll")) {
@@ -1852,7 +1654,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 2;
       }
-      
     // Kamadans ---------------------------------------------------------------
     } else if (encounter.equals("Kamadans")) {
       if (attackName.equals("Attack Roll")) {
@@ -1867,7 +1668,6 @@ public class Encounter {
                  + (int) (Math.random() * 6 + 1) + 3;
         }
       }
-      
     // Lizardfolk -------------------------------------------------------------
     } else if (encounter.equals("Lizardfolk")) {
       if (attackName.equals("Attack Roll")) {
@@ -1875,7 +1675,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 2;
       }
-      
     // Magmin -----------------------------------------------------------------
     } else if (encounter.equals("Magmin")) {
       if (attackName.equals("Attack Roll")) {
@@ -1883,7 +1682,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
       }
-      
     // Mantrap ----------------------------------------------------------------
     } else if (encounter.equals("Mantrap")) {
       if (attackName.equals("Attack Roll")) {
@@ -1892,7 +1690,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
       }
-      
     // Maphit -----------------------------------------------------------------
     } else if (encounter.equals("Maphit")) {
       if (attackName.equals("Attack Roll")) {
@@ -1900,7 +1697,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1) + 1;
       }
-
     // Pterafolk --------------------------------------------------------------
     } else if (encounter.equals("Pterafolk")) {
       if (attackName.equals("Attack Roll")) {
@@ -1913,7 +1709,6 @@ public class Encounter {
           return (int) (Math.random() * 6 + 1) + 2;
         }
       }
-
     // Red Wizard -------------------------------------------------------------
     } else if (encounter.equals("Red Wizard")) {
       if (attackName.equals("Attack Roll")) {
@@ -1921,7 +1716,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 1;
       }
-      
     // Sea Hag ----------------------------------------------------------------
     } else if (encounter.equals("Sea Hag")) {
       if (attackName.equals("Attack Roll")) {
@@ -1930,7 +1724,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 6;
       }
-      
     // Shambling Mound --------------------------------------------------------
     } else if (encounter.equals("Shambling Mound")) {
       if (attackName.equals("Attack Roll")) {
@@ -1939,7 +1732,6 @@ public class Encounter {
         return (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + 4;
       }
-      
     // Constrictor Snake ------------------------------------------------------
     } else if (encounter.equals("Constrictor Snake")) {
       if (attackName.equals("Attack Roll")) {
@@ -1947,7 +1739,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 2;
       }
-      
     // Giant Constrictor Snake ------------------------------------------------
     } else if (encounter.equals("Giant Constrictor Snake")) {
       if (attackName.equals("Attack Roll")) {
@@ -1956,7 +1747,6 @@ public class Encounter {
         return (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + 4;
       }
-      
     // Giant Poisonous Snake --------------------------------------------------
     } else if (encounter.equals("Giant Poisonous Snake")) {
       if (attackName.equals("Attack Roll")) {
@@ -1966,7 +1756,6 @@ public class Encounter {
                + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 4;
       }
-      
     // Spider -----------------------------------------------------------------
     } else if (encounter.equals("Spider")) {
       if (attackName.equals("Attack Roll")) {
@@ -1975,7 +1764,6 @@ public class Encounter {
         return (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                + (int) (Math.random() * 8 + 1) + 3;
       }
-      
     // Stirge -----------------------------------------------------------------
     } else if (encounter.equals("Stirge")) {
       if (attackName.equals("Attack Roll")) {
@@ -1983,7 +1771,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1) + 3;
       }
-      
     // Su-monster -------------------------------------------------------------
     } else if (encounter.equals("Su-monster")) {
       if (attackName.equals("Attack Roll")) {
@@ -1997,7 +1784,6 @@ public class Encounter {
                  + 3;
         }
       }
-      
     // Swarm of Bats ----------------------------------------------------------
     } else if (encounter.equals("Swarm of Bats")) {
       if (attackName.equals("Attack Roll")) {
@@ -2005,7 +1791,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 4 + 1);
       }
-      
     // Swarm of Insects -------------------------------------------------------
     } else if (encounter.equals("Swarm of Insects")) {
       if (attackName.equals("Attack Roll")) {
@@ -2014,7 +1799,6 @@ public class Encounter {
         return (int) (Math.random() * 4 + 1) + (int) (Math.random() * 4 + 1)
                + (int) (Math.random() * 4 + 1);
       }
-      
     // Swarm of Quippers ------------------------------------------------------
     } else if (encounter.equals("Swarm of Quippers")) {
       if (attackName.equals("Attack Roll")) {
@@ -2022,7 +1806,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1);
       }
-      
     // Tiger ------------------------------------------------------------------
     } else if (encounter.equals("Tiger")) {
       if (attackName.equals("Attack Roll")) {
@@ -2030,7 +1813,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 10 + 1) + 3;
       }
-      
     // Tri-flower Frond -------------------------------------------------------
     } else if (encounter.equals("Tri-flower Frond")) {
       if (attackName.equals("Attack Roll")) {
@@ -2039,7 +1821,6 @@ public class Encounter {
         return (int) (Math.random() * 4 + 1) + (int) (Math.random() * 4 + 1)
                + (int) (Math.random() * 4 + 1);
       }
-      
     // Troll ------------------------------------------------------------------
     } else if (encounter.equals("Troll")) {
       if (attackName.equals("Attack Roll")) {
@@ -2052,7 +1833,6 @@ public class Encounter {
                  + 4;
         }
       }
-
     // Ghoul ------------------------------------------------------------------
     } else if (encounter.equals("Ghoul")) {
       if (attackName.equals("Attack Roll")) {
@@ -2061,7 +1841,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + 2;
       }
-
     // Skeleton----------------------------------------------------------------
     } else if (encounter.equals("Skeleton")) {
       if (attackName.equals("Attack Roll")) {
@@ -2069,7 +1848,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 2;
       }
-      
     // Specter ----------------------------------------------------------------
     } else if (encounter.equals("Specter")) {
       if (attackName.equals("Attack Roll")) {
@@ -2078,7 +1856,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                + (int) (Math.random() * 6 + 1);
       }
-      
     // Wight ------------------------------------------------------------------
     } else if (encounter.equals("Wight")) {
       if (attackName.equals("Attack Roll")) {
@@ -2086,7 +1863,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 10 + 1) + 2;
       }
-      
     // Zombie
     } else if (encounter.equals("Zombie")) {
       // Normal Zombie.
@@ -2096,7 +1872,6 @@ public class Encounter {
         } else if (attackName.equals("Damage Roll")) {
           return (int) (Math.random() * 6 + 1) + 1;
         }
-
       // Anylosaurus Zombie.
       } else if (zombieRoll == 4 || zombieRoll == 5) {
         if (attackName.equals("Attack Roll")) {
@@ -2106,7 +1881,6 @@ public class Encounter {
                  + (int) (Math.random() * 6 + 1) + (int) (Math.random() * 6 + 1)
                  + 4;
         }
-        
       // Garillon Zombie.
       } else if (zombieRoll == 6 || zombieRoll == 7) {
         if (attackName.equals("Attack Roll")) {
@@ -2114,7 +1888,6 @@ public class Encounter {
         } else if (attackName.equals("Damage Roll")) {
           return (int) (Math.random() * 6 + 1) + 4;
         }
-        
       // Ogre Zombie.
       }  else if (zombieRoll == 8 || zombieRoll == 9) {
         if (attackName.equals("Attack Roll")) {
@@ -2123,7 +1896,6 @@ public class Encounter {
           return (int) (Math.random() * 8 + 1) + (int) (Math.random() * 8 + 1)
                  + 4;
         }
-        
       // Tyrannosaurus Zombie.
       } else {
         if (attackNumber == 1) {
@@ -2135,7 +1907,6 @@ public class Encounter {
                  + (int) (Math.random() * 8 + 1) + 7;
         }
       }
-
     // Vegepygmie -------------------------------------------------------------
     } else if (encounter.equals("Vegepygmie")) {
       if (attackName.equals("Attack Roll")) {
@@ -2143,7 +1914,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 6 + 1) + 2;
       }
-
     // Yellow Musk Creeper And Zombies ----------------------------------------
     } else if (encounter.equals("Yellow Musk Creeper And Zombies")) {
       if (attackName.equals("Attack Roll")) {
@@ -2151,7 +1921,6 @@ public class Encounter {
       } else if (attackName.equals("Damage Roll")) {
         return (int) (Math.random() * 8 + 1) + 1;
       }
-
     // Yuan-ti ----------------------------------------------------------------
     } else if (encounter.equals("Yuan-ti")) {
       if (attackName.equals("Attack Roll")) {
@@ -2164,7 +1933,6 @@ public class Encounter {
           return (int) (Math.random() * 6 + 1) + 3;
         }
       }
-      
     // Zhentarim --------------------------------------------------------------
     } else if (encounter.equals("Zhentarim")) {
       if (attackName.equals("Attack Roll")) {
@@ -2173,7 +1941,6 @@ public class Encounter {
         return (int) (Math.random() * 6 + 1) + 1;
       }
     }
-
     return 0;
   }
 }
