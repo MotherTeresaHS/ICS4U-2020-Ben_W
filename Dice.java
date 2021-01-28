@@ -1,4 +1,4 @@
-/*
+*
 * The dice program implements an application that
 * rolls dice.
 *
