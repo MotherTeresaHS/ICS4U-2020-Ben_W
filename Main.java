@@ -252,11 +252,11 @@ public class Main {
     wait(3000);
     //-------------------------------------------------------------------------
     // Combat.
-    actionNumber = 0;
     // While loop to run the combat while there are still enemies.
     while (someEncounter.enemyHealth > 0) {
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // Fighter's Turn
+      actionNumber = 0;
       while (actionNumber < someFighter.numberOfActions
              && someFighter.isUnconcious == false
              && someFighter.isDead == false) {
@@ -361,8 +361,7 @@ public class Main {
       }
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // Fighter's Bonus Action
-      while (true && someFighter.isUnconcious == false
-             && someFighter.isDead == false) {
+      while (someFighter.isUnconcious == false && someFighter.isDead == false) {
         // Clearing the screen.
         clearScreen();
         // Printing out info on the current character.
@@ -412,30 +411,12 @@ public class Main {
       if (someFighter.isUnconcious && someFighter.isDead == false
           && someFighter.currentHitPoints <=0) {
         clearScreen();
-        deathSaveRoll = someDice.rollD20("");
         System.out.println(someFighter.getCharacterInfo());
-        if (deathSaveRoll >= 10) {
-          System.out.println(someFighter.name + " is hanging in there!");
-          someFighter.deathSaveSuccess++;
-          wait(1000);
-        } else {
-          System.out.println(someFighter.name + " is in a critical condition!");
-          someFighter.deathSaveFailure++;
-          wait(1000);
-        }
+        // Making the death save.
+        System.out.println(someFighter.makeDeathSave());
       }
-      if (someFighter.deathSaveFailure >= 3 && someFighter.isDead == false) {
-        someFighter.isDead = true;
-        System.out.println("\u001B[31m☠ " + someFighter.name 
-                           + " has died ☠\u001B[0m");
-        wait(1000);
-        return "Dead";
-      }
-      if (someFighter.deathSaveSuccess >= 3 && someFighter.isDead == false
-          && someFighter.isUnconcious == true) {
-        System.out.println(someFighter.name + " has held on to life!");
-        someFighter.currentHitPoints = 1;
-        wait(1000);
+      if (someFighter.isDead) {
+        return ("Dead");
       }
       someFighter.currentArmorClass = someFighter.armorClass;
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -466,6 +447,9 @@ public class Main {
       // For every enemy in the encounter.
       for (int enemyNumber = 0; enemyNumber <= someEncounter.numberOfEnemies;
            enemyNumber++) {
+        if (someFighter.isUnconcious) {
+          break;
+        }
         // For every attack the enemy has.
         for (int attackNumber = 0; attackNumber < someEncounter.numberOfAttacks;
              attackNumber++) {
@@ -689,13 +673,22 @@ public class Main {
     // Encounters
     
     //Checking for encounters.
-    String encounter = someMap.rollEncounter(someDice.rollD20(""),
-                                             someDice.rollD100());
+    String encounter;
+    if (someMap.playerPosition % 74 == 0) {
+      encounter = someMap.rollEncounter(20, 29);
+    } else {
+      encounter = someMap.rollEncounter(someDice.rollD20(""),
+                                        someDice.rollD100());
+    }
     String end = runEncounter(encounter, someWeather, someDice, someFighter,
                               someAttack, someEncounter);
     if (end.equals("Dead")) {
       clearScreen();
       return ("- GAME OVER -");
+    }
+    if (someMap.playerPosition % 74 == 0) {
+      clearScreen();
+      return ("Won");
     }
     clearScreen();
 
@@ -706,7 +699,18 @@ public class Main {
     if (encounter.equals("None")) {
       System.out.println("\u001B[32m- No Encounters Today -\u001B[0m");
     }
-    
+    System.out.println("Current Location: " + someMap.getBiome());
+    // Giving them some food if they're in a town.
+    if (someMap.getBiome().equals("Settlement")) {
+      if (someFighter.lbsOfFood <= 10) {
+        System.out.println(someFighter.name + " got some food.");
+        someFighter.lbsOfFood = 11;
+      }
+      if (someFighter.gallonsOfWater <= 21) {
+        someFighter.gallonsOfWater = 22;
+        System.out.println(someFighter.name + " got some water.");
+      }
+    }
     // Setting this var to 0 so it can see if this character too exhaustion.
     someFighter.tookExhaustion = 0;
 
@@ -742,11 +746,11 @@ public class Main {
     }
 
     // Foraging for food.
-    System.out.println(someFighter.forageFood(someDice.rollD20(forageStatus),
-                                              someDice.rollD6()));
+    System.out.println(someFighter.forage(someDice.rollD20(forageStatus),
+                                          someDice.rollD6(), "Food"));
     // Foraging for water.
-    System.out.println(someFighter.forageWater(someDice.rollD20(forageStatus),
-                                               someDice.rollD6()));
+    System.out.println(someFighter.forage(someDice.rollD20(forageStatus),
+                                          someDice.rollD6(), "Water"));
     // Eating.
     System.out.println(someFighter.eat());
     // Drinking.
@@ -760,13 +764,14 @@ public class Main {
     // Checking if the fighter has died to to exhaustion.
     if (someFighter.getExhaustion() >= 6) {
       if (someFighter.name.equals("Bobby")) {
-        System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
+        System.out.println("\u001B[31m☠ " + someFighter.name 
+                           + " did what he had to do ☠\u001B[0m");
         System.out.println("[Press ENTER to continue]");
         enter = scanForEnter.nextLine();
         return "- GAME OVER -";
       }
       System.out.println("\u001B[31m☠ " + someFighter.name + " has passed "
-       + "away due to exhaustion " + "☠\u001B[0m");
+                         + "away due to exhaustion " + "☠\u001B[0m");
        System.out.println("[Press ENTER to continue]");
       enter = scanForEnter.nextLine();
       clearScreen();
@@ -783,6 +788,7 @@ public class Main {
     System.out.println("- The Party Took a Long Rest -");
     // Loosing exhaustion
     System.out.println(someFighter.loseExhaustion());
+    someFighter.isUnconcious = false;
     // Next day.
     someWeather.dayNumber += 1;
     // Regaining hp.
@@ -790,6 +796,8 @@ public class Main {
     someFighter.isSecondWindReady = true;
     someFighter.isActionSurgeReady = true;
     System.out.println(someFighter.levelUp());
+    someFighter.deathSaveFailure = 0;
+    someFighter.deathSaveSuccess = 0;
 
     // Waiting for enter.
     System.out.println("[Press ENTER to continue]");
@@ -798,7 +806,6 @@ public class Main {
     return ("");
     //-------------------------------------------------------------------------
   }
-  
 //=============================================================================
   
   public static void clearScreen() {
