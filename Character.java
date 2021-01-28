@@ -10,6 +10,7 @@
 import java.util.ArrayList;  // Import the ArrayList class
 import java.util.Random; // Import the random number class
 //=============================================================================
+
 abstract class Character {
   // Character Name.
   public String name;
@@ -61,7 +62,8 @@ abstract class Character {
   private ArrayList<String> equipment = new ArrayList<String>();
   // Skills
   public ArrayList<String> proficiencies = new ArrayList<String>();
-//=============================================================================
+  //===========================================================================
+
   /**
    * Replicates rolling a D20.
    */
@@ -87,7 +89,8 @@ abstract class Character {
       return roll1;
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Adds equipment to the characters inventory.
    */
@@ -108,7 +111,8 @@ abstract class Character {
       equipment.add(type);
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the equipment.
    */
@@ -118,8 +122,7 @@ abstract class Character {
       if (position % 3 == 0) {
         equipmentAsString += ((position / 3) + 1) + ". | "
                              + equipment.get(position);
-      }
-      else if ((position - 1) % 3 == 0) {
+      } else if ((position - 1) % 3 == 0) {
         equipmentAsString += " = " + equipment.get(position) + " lbs\n";
       }
     }
@@ -129,7 +132,8 @@ abstract class Character {
       return equipmentAsString;
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the weapons.
    */
@@ -151,7 +155,8 @@ abstract class Character {
       return weaponsAsString + "\n[B = Back]";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the weapons.
    */
@@ -174,7 +179,8 @@ abstract class Character {
       return "Null";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Gain Exhaustion.
    */
@@ -184,7 +190,8 @@ abstract class Character {
     return "\u001B[31m☠ " + name + " now has " + exhaustion 
            + " levels of exhaustion ☠\u001B[0m";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Lose Exhaustion.
    */
@@ -202,14 +209,16 @@ abstract class Character {
       }
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Getting how many levels of exhaustion they have.
    */
   public int getExhaustion() {
     return exhaustion;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Eat.
    */
@@ -218,7 +227,7 @@ abstract class Character {
     if (lbsOfFood < 0) {
       lbsOfFood = 0;
       if (daysWithoutFood > 3 + ((constitution - constitution % 2) / 2)) {
-         return "\u001B[31m☠ " + name + " did not consume enough food ☠"
+        return "\u001B[31m☠ " + name + " did not consume enough food ☠"
                 + "\u001B[0m\n" + gainExhaustion();
       } else {
         daysWithoutFood++;
@@ -228,7 +237,8 @@ abstract class Character {
     }
     return "\u001B[32m🗸 " + name + " ate 1 lbs of food 🗸\u001B[0m";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Drink.
    */
@@ -237,18 +247,19 @@ abstract class Character {
     if (gallonsOfWater < 0) {
       gallonsOfWater = 0;
       return "\u001B[31m☠ " + name + " did not consume enough water ☠"
-             + "\u001B[0m\n" + gainExhaustion() ;
+             + "\u001B[0m\n" + gainExhaustion();
     } else {
       return "\u001B[32m🗸 " + name + " drank 2 gallonsOfWater 🗸\u001B[0m";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Foraging for food and water.
    */
   public String forage(int forageRoll, int foundRoll, String forageType) {
     // Succsess.
-    if (makeCheck( "Wis", "Survival", "", forageRoll) > 15) {
+    if (makeCheck("Wis", "Survival", "", forageRoll) > 15) {
       if (forageType.equals("Water")) {
         gallonsOfWater += foundRoll;
         // Showing how much they found.
@@ -270,7 +281,8 @@ abstract class Character {
       }
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Making a skill check..
    */
@@ -302,7 +314,8 @@ abstract class Character {
     }
     return roll;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Getting character info.
    */
@@ -338,7 +351,8 @@ abstract class Character {
     }
     return characterInfo + "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Making an attack roll.
    */
@@ -376,7 +390,8 @@ abstract class Character {
     return attackRoll + (((strength - strength % 2) - 10) / 2)
            + proficiencyBonus;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function is used to tell if the player has successfuly run away from
    * the encounter.
@@ -399,8 +414,8 @@ abstract class Character {
     // First option: Run ------------------------------------------------------
     } else if (playerChoice.equals("1")) {
       // Making a check to see if they got away.
-      if (makeCheck("Dex", "Acrobatics", "Check", rollD20(rollStatus)) > runDc)
-      {
+      if (makeCheck("Dex", "Acrobatics", "Check", rollD20(rollStatus))
+          > runDc) {
         return "Succsess";
       // Failed to get away
       } else {
@@ -448,11 +463,12 @@ abstract class Character {
       return "Invalid Input";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function makes death saves for the character.
    */
-   public String makeDeathSave() {
+  public String makeDeathSave() {
     if (deathSaveFailure >= 3) {
       isDead = true;
       return "\u001B[31m☠ " + name + " has passed away... ☠\u001B[0m";
