@@ -441,7 +441,7 @@ public class Encounter {
       numberOfAttacks = 1;
       // Stats ----------------------------------------------
       return "- The party sees a herd of " + numberOfEnemies
-             + " grazing nearby. -";
+             + " hadrosauruses grazing nearby. -";
     // Pleiosaurus ------------------------------------------------------------
     } else if (encounter.equals("Pleiosaurus")) {
       // Stats ----------------------------------------------
@@ -495,9 +495,9 @@ public class Encounter {
       numberOfEnemies = 1;
       healthOfOne = 136;
       enemyHealth = healthOfOne * numberOfEnemies;
-      runDc = 10;
-      intimidateDc = 30;
-      tameDc = 30;
+      runDc = 100;
+      intimidateDc = 100;
+      tameDc = 100;
       enemyAc = 13;
       enemyType = "Beast";
       expForOne = 3900;
@@ -1944,3 +1944,4 @@ public class Encounter {
     return 0;
   }
 }
+
