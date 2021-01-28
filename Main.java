@@ -450,7 +450,7 @@ public class Main {
       System.out.println("\u001B[31m- " + encounter + "'s turn -\u001B[0m");
       // Waiting to make sure that they see the text.
       // For every enemy in the encounter.
-      for (int enemyNumber = 0; enemyNumber <= someEncounter.numberOfEnemies;
+      for (int enemyNumber = 0; enemyNumber < someEncounter.numberOfEnemies;
            enemyNumber++) {
         if (someFighter.isUnconcious) {
           break;
