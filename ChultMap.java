@@ -1196,6 +1196,42 @@ public class ChultMap {
   }
 //=============================================================================
   /**
+   * This function returns the biome the player is in..
+   */
+  public static String getBiome() {
+    // Returning beach.
+    if (map [playerPosition] [0] == 0){
+      return "Beach";
+    // Returning no undead.
+    } else if (map [playerPosition] [0] == 1){
+      return "Jungle (No Undead)";
+    // Returning lesser undead.
+    } else if (map [playerPosition] [0] == 2){
+      return "Jungle (Lesser Undead)";
+    // Returning greater undead.
+    } else if (map [playerPosition] [0] == 3){
+      return "Jungle (Greater Undead)";
+    // Returning mountain.
+    } else if (map [playerPosition] [0] == 4){
+      return "Mountains";
+    // Returning river.
+    } else if (map [playerPosition] [0] == 5){
+      return "River";
+    // Returning swamp.
+    } else if (map [playerPosition] [0] == 6){
+      return "Swamp";
+    // Returning wasteland.
+    } else if (map [playerPosition] [0] == 7){
+      return "Wasteland";
+    // Returning town.
+    } else if (map [playerPosition] [0] == 8){
+      return "Settlement";
+    }
+    return "???";
+  }
+  
+//=============================================================================
+  /**
    * This function determines if the player is lost.
    */
   public static String isPlayerLost(String direction, int check) {
@@ -1301,7 +1337,7 @@ public class ChultMap {
    * This determins if there's an encounter.
    */
   public static String rollEncounter(int encounterRoll, int whichEncounter) {
-    if (encounterRoll >= 0) {
+    if (encounterRoll >= 16) {
       // Beach encounters: ----------------------------------------------------
       if (map [playerPosition] [0] == 0) {
         if (whichEncounter >= 1 && whichEncounter <= 7) {
