@@ -680,8 +680,8 @@ public class Main {
     
     //Checking for encounters.
     String encounter;
-    if (someMap.playerPosition % 74 == 0) {
-      encounter = someMap.rollEncounter(20, 29);
+    if ((someMap.playerPosition + 1) % 72 == 0) {
+      encounter = "Tyrannosaurus";
     } else {
       encounter = someMap.rollEncounter(someDice.rollD20(""),
                                         someDice.rollD100());
@@ -692,7 +692,7 @@ public class Main {
       clearScreen();
       return ("- GAME OVER -");
     }
-    if (someMap.playerPosition % 74 == 0) {
+    if ((someMap.playerPosition + 1) % 72 == 0) {
       clearScreen();
       return ("Won");
     }
