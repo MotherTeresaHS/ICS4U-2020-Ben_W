@@ -12,7 +12,7 @@ import java.util.Random; // Import the random number class
 
 public class Encounter {
 
-//=============================================================================
+  //===========================================================================
   // Variables --------------------------------------------------------------
   // Amount of exp gained for killing one:
   public int expForOne = 0;
@@ -35,7 +35,8 @@ public class Encounter {
   public int tameDc = 0; // Trying to take them.
   // Roll to see what zombie encounter they get.
   private int zombieRoll = 0;
-//=============================================================================
+  //===========================================================================
+
   /**
    * Replicates rolling a D20.
    */
@@ -60,7 +61,8 @@ public class Encounter {
       return roll1;
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Getting the encounter type.
    */
@@ -94,7 +96,8 @@ public class Encounter {
       return "Hostile";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Setting the encounter stats.
    */
@@ -1312,7 +1315,7 @@ public class Encounter {
       enemyAc = 12;
       enemyType = "Humanoid";
       expForOne = 700;
-      numberOfAttacks = 1;
+      numberOfAttacks = 3;
       // Stats ----------------------------------------------
       return "- The party is attacked by " + numberOfEnemies + " yuan-ti! -";
     // Zhentarim --------------------------------------------------------------
@@ -1338,6 +1341,7 @@ public class Encounter {
     }
   }
   //===========================================================================
+
   /**
    * Getting the enemies attacks.
    */
@@ -1944,4 +1948,3 @@ public class Encounter {
     return 0;
   }
 }
-
