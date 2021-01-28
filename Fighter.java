@@ -9,12 +9,13 @@
 
 public class Fighter extends Character {
   
-//=============================================================================
+  //===========================================================================
   // If their various abilities are ready.
   public boolean isSecondWindReady = true;
   public boolean isProtectionReady = true;
   public boolean isActionSurgeReady = true;
-//=============================================================================
+  //===========================================================================
+
   /**
    * Setting a bunch of various variables from Character.
    */
@@ -40,7 +41,8 @@ public class Fighter extends Character {
     proficiencies.add("Survival");
     experiencePoints = 0;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Printing out what the fighter can do.
    */
@@ -51,7 +53,8 @@ public class Fighter extends Character {
     }
     return choices + " [N = Nothing]";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Changing their choice from int so string.
    */
@@ -71,14 +74,16 @@ public class Fighter extends Character {
       return "Invlaid";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Bonus action options.
    */
   public static String bonusActions() {
     return "[1 = Second Wind] [2 = Attack] [N = Nothing]";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Second wind.
    */
@@ -97,7 +102,8 @@ public class Fighter extends Character {
     return "\u001B[31m" + name + " has already used second wind, finish a long"
            + " rest to use it again!\u001B[0m";
   }
-//=============================================================================
+  //===========================================================================
+  
   /**
    * Action Surge.
    */
@@ -110,7 +116,8 @@ public class Fighter extends Character {
       return "Null";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Leveling up.
    */
@@ -159,7 +166,7 @@ public class Fighter extends Character {
     if (super.experiencePoints >= 64000 && super.level == 9) {
       levelsGained++;
     }
-    for (int count = 0; count < levelsGained; count++) {
+    for (int count = 0; count <= levelsGained; count++) {
       super.maxHitPoints += (6 + (((super.constitution - super.constitution
                                     % 2) - 10) / 2));
       super.level++;
