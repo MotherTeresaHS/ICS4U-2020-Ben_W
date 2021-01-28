@@ -20,13 +20,13 @@ public class Fighter extends Character {
    */
   public Fighter() {
     super();
-    maxHitPoints = 12; //12
-    currentHitPoints = 12; //12
+    maxHitPoints = 112; //12
+    currentHitPoints = 112; //12
     armorClass = 13; //Chain Shirt.
     // Ability Scores.
-    strength = 16;
-    dexterity = 11;
-    constitution = 16;
+    strength = 20;
+    dexterity = 14;
+    constitution = 20;
     intelligence = 11;
     wisdom = 13;
     charisma = 10;
@@ -118,56 +118,33 @@ public class Fighter extends Character {
     int levelsGained = 0;
     // Level 2 ----------------------------------------------------------------
     if (super.experiencePoints >= 300 && super.level == 1) {
-      super.level++;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 3 ----------------------------------------------------------------
     if (super.experiencePoints >= 900 && super.level == 2) {
-      super.level++;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 4 ----------------------------------------------------------------
     if (super.experiencePoints >= 2700 && super.level == 3) {
-      super.level++;
       super.constitution += 2;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 5 ----------------------------------------------------------------
     if (super.experiencePoints >= 6500 && super.level == 4) {
-      super.level++;
       super.proficiencyBonus++;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       super.numberOfAttacks++;
       levelsGained++;
     }
     // Level 6 ----------------------------------------------------------------
     if (super.experiencePoints >= 14000 && super.level == 5) {
-      super.level++;
-      super.strength += 2;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 7 ----------------------------------------------------------------
     if (super.experiencePoints >= 23000 && super.level == 6) {
-      super.level++;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 8 ----------------------------------------------------------------
     if (super.experiencePoints >= 34000 && super.level == 7) {
-      super.level++;
-      super.strength += 2;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
     // Level 9 ----------------------------------------------------------------
@@ -180,14 +157,29 @@ public class Fighter extends Character {
     }
     // Level 10 ----------------------------------------------------------------
     if (super.experiencePoints >= 64000 && super.level == 9) {
-      super.level++;
-      super.maxHitPoints += (6 + (((super.constitution - super.constitution
-                                    % 2) - 10) / 2));
       levelsGained++;
     }
+    for (int count = 0; count < levelsGained; count++) {
+      super.maxHitPoints += (6 + (((super.constitution - super.constitution
+                                    % 2) - 10) / 2));
+      super.level++;
+      super.constitution += 5;
+      super.strength += 5;
+      super.dexterity += 5;
+      super.intelligence += 2;
+      super.wisdom += 2;
+      super.charisma += 2;
+    }
     if (levelsGained > 0) {
-      return super.name + " leveled up to level " + super.level + "!\nHit "
-             + "points increased to: " + super.maxHitPoints;
+      return super.name + " leveled up to level " + super.level + "!\n"
+             + "-------------------------------------------------------"
+             + "\nHp:  " + super.maxHitPoints
+             + "\nStr: " + super.strength
+             + "\nCon: " + super.constitution
+             + "\nDex: " + super.dexterity
+             + "\nInt: " + super.intelligence
+             + "\nWis: " + super.wisdom
+             + "\nCha: " + super.charisma;
     } else {
       return "";
     }
