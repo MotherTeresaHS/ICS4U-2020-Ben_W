@@ -15,6 +15,9 @@ public class Weather {
   
   public int dayNumber = 1;
   
+  /**
+   * Sets the day's weather.
+   */
   public static int setWeather(int roll) {
     if (roll <= 16) {
       currentWeather = "Occasional light rain";
