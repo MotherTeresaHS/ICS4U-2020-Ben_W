@@ -17,42 +17,41 @@ import java.util.Scanner;  // Import the Scanner class
 
 public class Main {
 
-//=============================================================================
+  //===========================================================================
   
   public static String lastWeapon = "";
   public static int lastWeaponNumber = -1;
   
-//=============================================================================
+  //===========================================================================
+
+  /**
+   * Makes the program sleep.
+   */
   public static void wait(int ms) {
     try {
       Thread.sleep(ms);
-    }
-    catch(InterruptedException ex) {
+    } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
     }
   }
   
-//=============================================================================
+  //===========================================================================
+
+  /**
+   * Makes the weapon attack.
+   */
   public static String weaponAttack(String type, Fighter someFighter,
                                     Encounter someEncounter, Dice someDice,
                                     Attack someAttack, String encounter) {
-    // Creating a scanner to scan the player's various choices.
-    Scanner scanChoice = new Scanner(System.in);
     // Variable for the creature's attack roll status.
     String attackRollStatus = "";
     // Variable for how much damage a creature has done.
     int damage = 0;
-    // Which weapon they chose to use.
-    String weaponNumber;
-    // Which weapon they found.
-    String foundWeapon = "";
     // For attack rolls.
-    int attackRoll;
-    // For the final value of the attack roll.
-    int finalValue;
+    int attackRoll = 0;
     // Number of enemies killed in one turn.
-    int enemiesKilled;
-    int attackNumber;
+    int enemiesKilled = 0;
+    int attackNumber = 0;
 
     if (type.equals("Bonus Action")
         && !someAttack.attackProperty1(lastWeapon).equals("Light")) {
@@ -67,9 +66,11 @@ public class Main {
     System.out.println(someFighter.showWeapons());
     // Asking them which weapon they would like to use.
     System.out.println("Which weapon would you like to attack with?");
+    // Creating a scanner to scan the player's various choices.
+    Scanner scanChoice = new Scanner(System.in);
     // Getting which weapon they would like to use and finding it.
-    weaponNumber = scanChoice.nextLine();
-    foundWeapon = someFighter.findWeapon(weaponNumber);
+    String weaponNumber = scanChoice.nextLine();
+    String foundWeapon = someFighter.findWeapon(weaponNumber);
     // Going back to the main menu.
     if (weaponNumber.equals("B") || weaponNumber.equals("b")) {
       return "Going back...";
@@ -95,10 +96,10 @@ public class Main {
                            + "their " + foundWeapon + "!");
         wait(500);
         // Making the attack roll ---------------------------------------
-        attackRoll = someFighter.makeAttackRoll(someAttack.
-                                                attackProperty1(foundWeapon),
-                                                someAttack.
-                                                attackProperty2(foundWeapon));
+        attackRoll = someFighter.makeAttackRoll(someAttack
+                                                .attackProperty1(foundWeapon),
+                                                someAttack
+                                                .attackProperty2(foundWeapon));
         // Telling the player what the character rolled.
         System.out.println(someFighter.name + " rolled a " + attackRoll
                            + " to hit.");
@@ -112,59 +113,59 @@ public class Main {
                                          someFighter.criticalHit,
                                          someFighter.fightingStyle, 
                                          someFighter.proficiencyBonus);
-        // Fighting style (Dueling) -----------------------------------
-        // Checking if the player picked a two handed or ranged.
-        if (someAttack.attackProperty1(foundWeapon).equals("Two-Handed")
-            || someAttack.attackProperty2(foundWeapon).equals("Ranged")) {
-          System.out.print("");
-          // Making sure that the player has the fighting style
-        } else if (someFighter.fightingStyle.equals("Dueling")) {
-          damage += 2;
-        }
-        // Checking for crits.
-        if (someFighter.criticalHit) {
-          // Telling them that they scored a crit.
-          System.out.println("\n---------------\n\033[0;93m CRITICAL"
-                                + " HIT!\u001B[0m\n---------------");
-          wait(500);
-        }
-        // Applying the damage ----------------------------------------
-        System.out.println("\u001B[32m" + someFighter.name + " dealt "
-                             + damage + " damage!\u001B[0m");
-        wait(500);
-        // Subtracking the damage fom their health.
-        someEncounter.enemyHealth -= damage;
-        // Keeping track of how many enemies were killed.
-        enemiesKilled = 0;
-        // Kills ------------------------------------------------------
-        // Counting how many enemies were killed.
-        while (true) {
-          // Checking if the health is below the threshhold.
-          if (someEncounter.enemyHealth < someEncounter.healthOfOne *
-              (someEncounter.numberOfEnemies - 1)
-              && someEncounter.numberOfEnemies - 1 != 0) {
-            // Adding 1 to enemies killed.
-            enemiesKilled++;
-            // Subtrackign 1 from number of enemies.
-            someEncounter.numberOfEnemies--;
-            // If its done.
-          } else {
-            // End the count..
-            break;
+          // Fighting style (Dueling) -----------------------------------
+          // Checking if the player picked a two handed or ranged.
+          if (someAttack.attackProperty1(foundWeapon).equals("Two-Handed")
+              || someAttack.attackProperty2(foundWeapon).equals("Ranged")) {
+            System.out.print("");
+            // Making sure that the player has the fighting style
+          } else if (someFighter.fightingStyle.equals("Dueling")) {
+            damage += 2;
           }
-        }
-        // If the player killed any enemies
-        if (enemiesKilled > 0) {
-          System.out.println("");
-          System.out.println(someFighter.name + " killed " + enemiesKilled
-                             + " " + encounter);
+          // Checking for crits.
+          if (someFighter.criticalHit) {
+            // Telling them that they scored a crit.
+            System.out.println("\n---------------\n\033[0;93m CRITICAL"
+                                + " HIT!\u001B[0m\n---------------");
+            wait(500);
+          }
+          // Applying the damage ----------------------------------------
+          System.out.println("\u001B[32m" + someFighter.name + " dealt "
+                             + damage + " damage!\u001B[0m");
           wait(500);
-        }
+          // Subtracking the damage fom their health.
+          someEncounter.enemyHealth -= damage;
+          // Keeping track of how many enemies were killed.
+          enemiesKilled = 0;
+          // Kills ------------------------------------------------------
+          // Counting how many enemies were killed.
+          while (true) {
+            // Checking if the health is below the threshhold.
+            if (someEncounter.enemyHealth < someEncounter.healthOfOne
+                * (someEncounter.numberOfEnemies - 1)
+                && someEncounter.numberOfEnemies - 1 != 0) {
+              // Adding 1 to enemies killed.
+              enemiesKilled++;
+              // Subtrackign 1 from number of enemies.
+              someEncounter.numberOfEnemies--;
+              // If its done.
+            } else {
+              // End the count..
+              break;
+            }
+          }
+          // If the player killed any enemies
+          if (enemiesKilled > 0) {
+            System.out.println("");
+            System.out.println(someFighter.name + " killed " + enemiesKilled
+                               + " " + encounter);
+            wait(500);
+          }
         // Misses -------------------------------------------------------
         // Else if they miss:
         } else {
-          System.out.println("\u001B[31mX " + someFighter.name +
-                               " missed " + encounter + " X\u001B[0m");
+          System.out.println("\u001B[31mX " + someFighter.name
+                             + " missed " + encounter + " X\u001B[0m");
         }
       }
       return "";
@@ -172,12 +173,15 @@ public class Main {
     return "";
   }
 
-//=============================================================================
+  //===========================================================================
 
+  /**
+   * Runs the combat.
+   */
   public static String runEncounter(String encounter, Weather someWeather,
                                     Dice someDice, Fighter someFighter,
-                                    Attack someAttack, Encounter someEncounter)
-                                    {
+                                    Attack someAttack,
+                                    Encounter someEncounter) {
     //-------------------------------------------------------------------------
     // Scanners
     // Creating a scanner to scan the player's various choices.
@@ -246,17 +250,18 @@ public class Main {
     } else {
       wait(3000);
     }
-    // Saving how many enemies there are at the start of the encounter.
-    int startingEnemies = someEncounter.numberOfEnemies;
     // Waiting to make sure that the players have seen the text.
     wait(3000);
+    // Saving how many enemies there are at the start of the encounter.
+    final int startingEnemies = someEncounter.numberOfEnemies;
     //-------------------------------------------------------------------------
     // Combat.
-    actionNumber = 0;
     // While loop to run the combat while there are still enemies.
     while (someEncounter.enemyHealth > 0) {
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // Fighter's Turn
+      actionNumber = 0;
+      someFighter.numberOfActions = 1;
       while (actionNumber < someFighter.numberOfActions
              && someFighter.isUnconcious == false
              && someFighter.isDead == false) {
@@ -361,8 +366,7 @@ public class Main {
       }
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // Fighter's Bonus Action
-      while (true && someFighter.isUnconcious == false
-             && someFighter.isDead == false) {
+      while (someFighter.isUnconcious == false && someFighter.isDead == false) {
         // Clearing the screen.
         clearScreen();
         // Printing out info on the current character.
@@ -410,32 +414,14 @@ public class Main {
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
       // Death Saves
       if (someFighter.isUnconcious && someFighter.isDead == false
-          && someFighter.currentHitPoints <=0) {
+          && someFighter.currentHitPoints <= 0) {
         clearScreen();
-        deathSaveRoll = someDice.rollD20("");
         System.out.println(someFighter.getCharacterInfo());
-        if (deathSaveRoll >= 10) {
-          System.out.println(someFighter.name + " is hanging in there!");
-          someFighter.deathSaveSuccess++;
-          wait(1000);
-        } else {
-          System.out.println(someFighter.name + " is in a critical condition!");
-          someFighter.deathSaveFailure++;
-          wait(1000);
-        }
+        // Making the death save.
+        System.out.println(someFighter.makeDeathSave());
       }
-      if (someFighter.deathSaveFailure >= 3 && someFighter.isDead == false) {
-        someFighter.isDead = true;
-        System.out.println("\u001B[31m☠ " + someFighter.name 
-                           + " has died ☠\u001B[0m");
-        wait(1000);
-        return "Dead";
-      }
-      if (someFighter.deathSaveSuccess >= 3 && someFighter.isDead == false
-          && someFighter.isUnconcious == true) {
-        System.out.println(someFighter.name + " has held on to life!");
-        someFighter.currentHitPoints = 1;
-        wait(1000);
+      if (someFighter.isDead) {
+        return ("Dead");
       }
       someFighter.currentArmorClass = someFighter.armorClass;
       //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -464,8 +450,11 @@ public class Main {
       System.out.println("\u001B[31m- " + encounter + "'s turn -\u001B[0m");
       // Waiting to make sure that they see the text.
       // For every enemy in the encounter.
-      for (int enemyNumber = 0; enemyNumber <= someEncounter.numberOfEnemies;
+      for (int enemyNumber = 0; enemyNumber < someEncounter.numberOfEnemies;
            enemyNumber++) {
+        if (someFighter.isUnconcious) {
+          break;
+        }
         // For every attack the enemy has.
         for (int attackNumber = 0; attackNumber < someEncounter.numberOfAttacks;
              attackNumber++) {
@@ -476,8 +465,8 @@ public class Main {
           // Setting the attack roll status to neutral.
           attackRollStatus = "";
           // If the player decided to dodge:
-          if ((someFighter.fightingStyle.equals("Protection") && someFighter.
-               isProtectionReady) || someFighter.dodge) {
+          if ((someFighter.fightingStyle.equals("Protection") && someFighter
+               .isProtectionReady) || someFighter.dodge) {
             // Setting the attack roll status to disadvantage.
             attackRollStatus = "Disadvantage";
             someFighter.isProtectionReady = false;
@@ -548,8 +537,11 @@ public class Main {
     return "0";
   }
 
-//=============================================================================
-  
+  //===========================================================================
+
+  /**
+   * Daily procedure.
+   */
   public static String dailyProcedure(ChultMap someMap, Weather someWeather,
                                       Dice someDice, Fighter someFighter,
                                       Attack someAttack,
@@ -560,9 +552,6 @@ public class Main {
 
     // Creating a scanner to scan for direction.
     Scanner scanDirection = new Scanner(System.in);
-    
-    // Creating a scanner to scan for enter.
-    Scanner scanForEnter = new Scanner(System.in);
 
     //-------------------------------------------------------------------------
     // Info on the day.
@@ -576,7 +565,8 @@ public class Main {
     System.out.println("- Day: " + someWeather.dayNumber + " -");
     // Showing the day's weather.
     System.out.println("Today's Forcast: " + someWeather.getWeather());
-
+    // Creating a scanner to scan for enter.
+    Scanner scanForEnter = new Scanner(System.in);
     // Making sure that the player has seen the day's conditions.
     System.out.println("");
     System.out.println("[Press ENTER to continue]");
@@ -689,13 +679,22 @@ public class Main {
     // Encounters
     
     //Checking for encounters.
-    String encounter = someMap.rollEncounter(someDice.rollD20(""),
-                                             someDice.rollD100());
+    String encounter;
+    if ((someMap.playerPosition + 1) % 72 == 0) {
+      encounter = "Tyrannosaurus";
+    } else {
+      encounter = someMap.rollEncounter(someDice.rollD20(""),
+                                        someDice.rollD100());
+    }
     String end = runEncounter(encounter, someWeather, someDice, someFighter,
                               someAttack, someEncounter);
     if (end.equals("Dead")) {
       clearScreen();
       return ("- GAME OVER -");
+    }
+    if ((someMap.playerPosition + 1) % 72 == 0) {
+      clearScreen();
+      return ("Won");
     }
     clearScreen();
 
@@ -706,7 +705,18 @@ public class Main {
     if (encounter.equals("None")) {
       System.out.println("\u001B[32m- No Encounters Today -\u001B[0m");
     }
-    
+    System.out.println("Current Location: " + someMap.getBiome());
+    // Giving them some food if they're in a town.
+    if (someMap.getBiome().equals("Settlement")) {
+      if (someFighter.lbsOfFood <= 10) {
+        System.out.println(someFighter.name + " got some food.");
+        someFighter.lbsOfFood = 11;
+      }
+      if (someFighter.gallonsOfWater <= 21) {
+        someFighter.gallonsOfWater = 22;
+        System.out.println(someFighter.name + " got some water.");
+      }
+    }
     // Setting this var to 0 so it can see if this character too exhaustion.
     someFighter.tookExhaustion = 0;
 
@@ -723,7 +733,7 @@ public class Main {
 
       // Fighter makes a CON save to see if they take a second level of
       // exhaustion.
-      if (someFighter.makeCheck( "Con", "", "Saving Throw",
+      if (someFighter.makeCheck("Con", "", "Saving Throw",
                                 someDice.rollD20("")) < 10) {
         // Fighter gains a level of exhaustion.
         System.out.println(someFighter.gainExhaustion());
@@ -742,11 +752,11 @@ public class Main {
     }
 
     // Foraging for food.
-    System.out.println(someFighter.forageFood(someDice.rollD20(forageStatus),
-                                              someDice.rollD6()));
+    System.out.println(someFighter.forage(someDice.rollD20(forageStatus),
+                                          someDice.rollD6(), "Food"));
     // Foraging for water.
-    System.out.println(someFighter.forageWater(someDice.rollD20(forageStatus),
-                                               someDice.rollD6()));
+    System.out.println(someFighter.forage(someDice.rollD20(forageStatus),
+                                          someDice.rollD6(), "Water"));
     // Eating.
     System.out.println(someFighter.eat());
     // Drinking.
@@ -760,14 +770,15 @@ public class Main {
     // Checking if the fighter has died to to exhaustion.
     if (someFighter.getExhaustion() >= 6) {
       if (someFighter.name.equals("Bobby")) {
-        System.out.println("\u001B[31m☠ " + someFighter.name + " did what he had to do ☠\u001B[0m");
+        System.out.println("\u001B[31m☠ " + someFighter.name 
+                           + " did what he had to do ☠\u001B[0m");
         System.out.println("[Press ENTER to continue]");
         enter = scanForEnter.nextLine();
         return "- GAME OVER -";
       }
       System.out.println("\u001B[31m☠ " + someFighter.name + " has passed "
-       + "away due to exhaustion " + "☠\u001B[0m");
-       System.out.println("[Press ENTER to continue]");
+                         + "away due to exhaustion " + "☠\u001B[0m");
+      System.out.println("[Press ENTER to continue]");
       enter = scanForEnter.nextLine();
       clearScreen();
       return ("- GAME OVER -");
@@ -783,6 +794,7 @@ public class Main {
     System.out.println("- The Party Took a Long Rest -");
     // Loosing exhaustion
     System.out.println(someFighter.loseExhaustion());
+    someFighter.isUnconcious = false;
     // Next day.
     someWeather.dayNumber += 1;
     // Regaining hp.
@@ -790,6 +802,8 @@ public class Main {
     someFighter.isSecondWindReady = true;
     someFighter.isActionSurgeReady = true;
     System.out.println(someFighter.levelUp());
+    someFighter.deathSaveFailure = 0;
+    someFighter.deathSaveSuccess = 0;
 
     // Waiting for enter.
     System.out.println("[Press ENTER to continue]");
@@ -798,9 +812,11 @@ public class Main {
     return ("");
     //-------------------------------------------------------------------------
   }
+  //===========================================================================
   
-//=============================================================================
-  
+  /**
+   * Clears the screen.
+   */
   public static void clearScreen() {
     //-------------------------------------------------------------------------
     // Clears the screen.
@@ -809,8 +825,11 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-//=============================================================================
+  //===========================================================================
   
+  /**
+   * Check if a string is numeric.
+   */
   public static boolean isNumeric(String str) {
     //-------------------------------------------------------------------------
     // Checking if a string is a number.
@@ -818,14 +837,13 @@ public class Main {
       Integer.parseInt(str);
       return true;
 
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       return false;
     }
     //-------------------------------------------------------------------------
   }
   
-//=============================================================================
-
+  //===========================================================================
   public enum MartialWeaponNames {
     //-------------------------------------------------------------------------
     // List of Martial Weapons.
@@ -866,8 +884,7 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-//=============================================================================
-
+  //===========================================================================
   public enum MartialWeaponWeights {
     //-------------------------------------------------------------------------
     // List of Martial Weapon weight.
@@ -908,14 +925,14 @@ public class Main {
     //-------------------------------------------------------------------------
   }
   
-//=============================================================================
+  //===========================================================================
   
+  /**
+   * Creates the fighter.
+   */
   public static void createFighter(Fighter someFighter, String hasPlayed) {
     //-------------------------------------------------------------------------
     // Creating the fighter character with the user.
-
-    // Creating a scanner to scan info on the first character.
-    Scanner scanFighter = new Scanner(System.in);
     
     Scanner scanForEnter = new Scanner(System.in);
 
@@ -933,6 +950,9 @@ public class Main {
       System.out.println("meting it out and staring it defiantly in the face.");
       System.out.println("");
     }
+
+    // Creating a scanner to scan info on the first character.
+    Scanner scanFighter = new Scanner(System.in);
 
     // Giving the fighter a name.
     System.out.println("Insert your fighter's name:");
@@ -1093,9 +1113,9 @@ public class Main {
           // Making the number of picked skills increase.
           weaponsChosen++;
           
-        if (weaponsChosen == numberOfWeapons) {
-          break;
-        }
+          if (weaponsChosen == numberOfWeapons) {
+            break;
+          }
 
         } else {
           System.out.println("\u001B[31mThat is not an option.\u001B[0m");
@@ -1207,8 +1227,7 @@ public class Main {
     clearScreen();
   }
   
-//=============================================================================
-
+  //===========================================================================
   /**
    * This function handles the input and output of the program.
    */
@@ -1216,14 +1235,9 @@ public class Main {
 
     //-------------------------------------------------------------------------
     // Scanners
-
-    // Creating a scanner to scan if this is their first time playing.
-    Scanner scanExperience = new Scanner(System.in);
     
     // Creating a scanner to scan for enter.
     Scanner scanForEnter = new Scanner(System.in);
-    
-    String enter;
 
     //-------------------------------------------------------------------------
     // Objects
@@ -1245,12 +1259,64 @@ public class Main {
 
     // Creating object to get encounter stats.
     Encounter someEncounter = new Encounter();
+    
+    System.out.println("                   JUNGLE OF ANNIHILATION");
+    System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+                       + "-=-=-");
+    System.out.println("                     .ed**** ***$$$$be.");
+    System.out.println("                   -*           ^****$$$e.");
+    System.out.println("                 .*                    $$$c");
+    System.out.println("                /                      *4$$b");
+    System.out.println("               d  3                      $$$$");
+    System.out.println("               $  *                   .$$$$$$");
+    System.out.println("              .$  ^c           $$$$$e$$$$$$$$.");
+    System.out.println("              d$L  4.         4$$$$$$$$$$$$$$b");
+    System.out.println("              $$$$b ^ceeeee.  4$$ECL.F*$$$$$$$");
+    System.out.println("  e$**=.      $$$$P d$$$$F $ $$$$$$$$$- $$$$$$");
+    System.out.println(" z$$b. ^c     3$$$F *$$$$b   $*$$$$$$$  $$$$**      .="
+                       + "**$c");
+    System.out.println("4$$$$L        $$P*  *$$b   .$ $$$$$...e$$        .=  e"
+                       + "$$$.");
+    System.out.println("^*$$$$$c  %..   *c    ..    $$ 3$$$$$$$$$$eF     zP  d"
+                       + "$$$$$");
+    System.out.println("  ***$$$ec   *   %ce**    $$$  $$$$$$$$$$*    .r* =$$"
+                       + "$$P**");
+    System.out.println("        **$b.  *c  *$e.    *** d$$$$$*L$$    .d*  e$$*"
+                       + "***");
+    System.out.println("          ^*$$c ^$c $$$      4J$$$$$% $$$ .e**.eeP*");
+    System.out.println("             *$$$$$$* $=e....$*$$**$cz$$* *..d$**");
+    System.out.println("               **$$$  *=%4.$ L L$ P3$$$F $$$P*");
+    System.out.println("                  *$   *%*ebJLzb$e$$$$$b $P*");
+    System.out.println("                    %..      4$$$$$$$$$$ *");
+    System.out.println("                     $$$e   z$$$$$$$$$$%");
+    System.out.println("                      **$c  *$$$$$$$P*");
+    System.out.println("                       .****$$$$$$$$bc");
+    System.out.println("                    .-*    .$***$$$****e.");
+    System.out.println("                 .-*    .e$*     **$c  ^*b.");
+    System.out.println("          .=*****    .e$**          **bc  **$e..");
+    System.out.println("        .$*        .z**               ^*$e.   ******e"
+                       + ".");
+    System.out.println("        $$ee$c   .d*                     **$.        3"
+                       + ".");
+    System.out.println("        ^*$E*)$..$*                         *   .ee==d"
+                       + "%");
+    System.out.println("           $.d$$$*                           *  J$$$e"
+                       + "*");
+    System.out.println("            *****                              *$$$*");
+    System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
+                       + "-=-=-");
+    System.out.println("                        [PRESS ENTER]"); 
+    String enter = scanForEnter.nextLine();
+    clearScreen();
   
     //-------------------------------------------------------------------------
     // Intro
     
+    // Creating a scanner to scan if this is their first time playing.
+    Scanner scanExperience = new Scanner(System.in);
+    
     // Checking to see if the player needs an explanation.
-    System.out.println("Have you played Tomb Of Annihilation before?");
+    System.out.println("Have you played Jungle Of Annihilation before?");
     System.out.println("[1 = YES] [2 = NO]");
     String hasPlayed = scanExperience.nextLine();
     
@@ -1263,15 +1329,12 @@ public class Main {
       // Story Overview.
       System.out.println("                - Game Overview -");
       System.out.println("-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-      System.out.println("Welcome to Tomb Of Annihilation! This is a game");
-      System.out.println("based off of the D&D campaign of the same name, and");
-      System.out.println("as such, it was use many of the same mechanics.");
-      System.out.println("This adventure will see you traveling over the vast");
-      System.out.println("jungles of the land of Chult in search of a");
-      System.out.println("forbidden artifact. Therefore, when choosing your");
-      System.out.println("skills, It is suggested to take ones such as");
-      System.out.println("SURVIVAL, which will give you the upper hand while");
-      System.out.println("exloring.");
+      System.out.println("Welcome to Jungle Of Annihilation! This is a game");
+      System.out.println("based off of the D&D campaign of a similar name, ");
+      System.out.println("and as such, it was use many of the same mechanics.");
+      System.out.println("This adventure will see you traveling over the");
+      System.out.println("vast jungles of the land of Chult in an attempt to");
+      System.out.println("escape.");
       System.out.println("");
       System.out.println("To start, we will create your party members.");
       System.out.println("");
@@ -1302,6 +1365,9 @@ public class Main {
                                   someAttack, someEncounter);
       if (end.equals("- GAME OVER -")) {
         System.out.println("- GAME OVER -");
+        break;
+      } else if (end.equals("Won")) {
+        System.out.println("You Successfully Escaped The Jungle!");
         break;
       }
     }

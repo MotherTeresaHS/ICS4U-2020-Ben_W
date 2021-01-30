@@ -10,6 +10,7 @@
 import java.util.ArrayList;  // Import the ArrayList class
 import java.util.Random; // Import the random number class
 //=============================================================================
+
 abstract class Character {
   // Character Name.
   public String name;
@@ -39,8 +40,8 @@ abstract class Character {
   // Exhaustion.
   private int exhaustion = 0;
   // Food and water.
-  public int lbsOfFood = 6;
-  public int gallonsOfWater = 4;
+  public int lbsOfFood = 11;
+  public int gallonsOfWater = 22;
   private int daysWithoutFood = 0;
   public int tookExhaustion;
   // Shield.
@@ -61,7 +62,8 @@ abstract class Character {
   private ArrayList<String> equipment = new ArrayList<String>();
   // Skills
   public ArrayList<String> proficiencies = new ArrayList<String>();
-//=============================================================================
+  //===========================================================================
+
   /**
    * Replicates rolling a D20.
    */
@@ -69,13 +71,14 @@ abstract class Character {
     // 2 Rolls.
     int roll1 = (int) (Math.random() * 20 + 1);
     int roll2 = (int) (Math.random() * 20 + 1);
-
+    // Rolling with advantage.
     if (rollWith.equals("Advantage")) {
       if (roll1 > roll2) {
         return roll1;
       } else {
         return roll2;
       }
+    // Rolling with disadvantage.
     } else if (rollWith.equals("Disadvantage")) {
       if (roll1 < roll2) {
         return roll1;
@@ -86,7 +89,8 @@ abstract class Character {
       return roll1;
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Adds equipment to the characters inventory.
    */
@@ -107,7 +111,8 @@ abstract class Character {
       equipment.add(type);
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the equipment.
    */
@@ -117,8 +122,7 @@ abstract class Character {
       if (position % 3 == 0) {
         equipmentAsString += ((position / 3) + 1) + ". | "
                              + equipment.get(position);
-      }
-      else if ((position - 1) % 3 == 0) {
+      } else if ((position - 1) % 3 == 0) {
         equipmentAsString += " = " + equipment.get(position) + " lbs\n";
       }
     }
@@ -128,7 +132,8 @@ abstract class Character {
       return equipmentAsString;
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the weapons.
    */
@@ -150,7 +155,8 @@ abstract class Character {
       return weaponsAsString + "\n[B = Back]";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Returns the weapons.
    */
@@ -173,7 +179,8 @@ abstract class Character {
       return "Null";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Gain Exhaustion.
    */
@@ -183,7 +190,8 @@ abstract class Character {
     return "\u001B[31m☠ " + name + " now has " + exhaustion 
            + " levels of exhaustion ☠\u001B[0m";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Lose Exhaustion.
    */
@@ -201,14 +209,16 @@ abstract class Character {
       }
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Getting how many levels of exhaustion they have.
    */
   public int getExhaustion() {
     return exhaustion;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Eat.
    */
@@ -217,7 +227,7 @@ abstract class Character {
     if (lbsOfFood < 0) {
       lbsOfFood = 0;
       if (daysWithoutFood > 3 + ((constitution - constitution % 2) / 2)) {
-         return "\u001B[31m☠ " + name + " did not consume enough food ☠"
+        return "\u001B[31m☠ " + name + " did not consume enough food ☠"
                 + "\u001B[0m\n" + gainExhaustion();
       } else {
         daysWithoutFood++;
@@ -227,7 +237,8 @@ abstract class Character {
     }
     return "\u001B[32m🗸 " + name + " ate 1 lbs of food 🗸\u001B[0m";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Drink.
    */
@@ -236,157 +247,151 @@ abstract class Character {
     if (gallonsOfWater < 0) {
       gallonsOfWater = 0;
       return "\u001B[31m☠ " + name + " did not consume enough water ☠"
-             + "\u001B[0m\n" + gainExhaustion() ;
+             + "\u001B[0m\n" + gainExhaustion();
     } else {
       return "\u001B[32m🗸 " + name + " drank 2 gallonsOfWater 🗸\u001B[0m";
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
-   * Foraging for food.
+   * Foraging for food and water.
    */
-  public String forageFood(int forageRoll, int foundRoll) {
-    // Foraging for food.
+  public String forage(int forageRoll, int foundRoll, String forageType) {
     // Succsess.
-    if (makeCheck( "Wis", "Survival", "", forageRoll) > 15) {
-
-      // Adding the food to their character.
-      lbsOfFood += foundRoll;
-
-      // Showing how much they found.
-      return "\u001B[32m🗸 " + name + " found " + foundRoll
+    if (makeCheck("Wis", "Survival", "", forageRoll) > 15) {
+      if (forageType.equals("Water")) {
+        gallonsOfWater += foundRoll;
+        // Showing how much they found.
+        return "\u001B[32m🗸 " + name + " found " + foundRoll
+               + " gallons of water 🗸\u001B[0m";
+      } else {
+        lbsOfFood += foundRoll;
+        return "\u001B[32m🗸 " + name + " found " + foundRoll
              + " lbs of food 🗸\u001B[0m";
-      
-    // Failure.
+      }
     } else {
-      return "\u001B[31mX " + name + " didn't find any food X" 
+      if (forageType.equals("Water")) {
+        // Showing how much they found.
+        return "\u001B[31mX " + name + " didn't find any water X" 
+               + "\u001B[0m";
+      } else {
+        return "\u001B[31mX " + name + " didn't find any food X" 
              + "\u001B[0m";
+      }
     }
   }
-//=============================================================================
-  /**
-   * Foraging for water.
-   */
-  public String forageWater(int forageRoll, int foundRoll) {
-    // Foraging for food.
-    // Succsess.
-    if (makeCheck( "Wis", "Survival", "", forageRoll) > 15) {
+  //===========================================================================
 
-      // Adding the food to their character.
-      gallonsOfWater += foundRoll;
-
-      // Showing how much they found.
-      return "\u001B[32m🗸 " + name + " found " + foundRoll
-             + " gallonsOfWater 🗸\u001B[0m";
-      
-    // Failure.
-    } else {
-      return "\u001B[31mX " + name + " didn't find any water X" 
-             + "\u001B[0m";
-    }
-  }
-//=============================================================================
   /**
    * Making a skill check..
    */
   public int makeCheck(String ability, String skill, String type, int roll) {
     int position;
     // What to do for a saving throw.
-    if (type.equals("Saving Throw")) {
-      for (position = 0; position < proficiencies.size(); position++) {
-        if (proficiencies.get(position).equals(ability)) {
-          roll += proficiencyBonus;
-        }
-      }
-    // Otherwise it's just a normal ability check.
-    } else {
-      for (position = 0; position < proficiencies.size(); position++) {
-        if (proficiencies.get(position).equals(skill)) {
-          roll += proficiencyBonus;
-        }
+    for (position = 0; position < proficiencies.size(); position++) {
+      if (proficiencies.get(position).equals(ability)
+          || proficiencies.get(position).equals(skill)) {
+        roll += proficiencyBonus;
       }
     }
+    if (!type.equals("Saving Throw") && skill.equals("")) {
+      roll -= proficiencyBonus;
+    }
+    // Adding skill mods ------------------------------------------------------
     if (ability.equals("Str")) {
       roll += (((strength - strength % 2) - 10) / 2);
-
     } else if (ability.equals("Con")) {
       roll += (((constitution - constitution % 2) - 10) / 2);
-
     } else if (ability.equals("Dex")) {
       roll += (((dexterity - dexterity % 2) - 10) / 2);
-
     } else if (ability.equals("Int")) {
       roll += (((intelligence - intelligence % 2) - 10) / 2);
-
     } else if (ability.equals("Wis")) {
       roll += (((wisdom - wisdom % 2) - 10) / 2);
-
     } else {
       roll += (((charisma - charisma % 2) - 10) / 2);
     }
     return roll;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Getting character info.
    */
   public String getCharacterInfo() {
+    // Reseting if they have their shield equiped.
     hasShieldEquiped = true;
+    // Initial character info.
+    String characterInfo = name + ":\n♥ HP: " + currentHitPoints + "\nØ AC: "
+                           + armorClass + "\nØ Shield:";
+    // Adding to it if they have a shield.
     if (hasShield && hasShieldEquiped) {
-      return name + ":\n♥ HP: " + currentHitPoints + "\nØ AC: " + armorClass
-             + "\nØ Shield: +2\n☆ Lv: " + level + "\n☆ exp: " 
-             + experiencePoints
-             + "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
+      characterInfo += "+2";
+    } else {
+      characterInfo += "Not equiped";
     }
-    return name + ":\n♥ HP: " + currentHitPoints + "\nØ AC: " + armorClass
-           + "\nØ Shield: Not equiped\n☆ Lv: " + level + "\n☆ exp: "
-           + experiencePoints
-           + "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
+    // Death Saves ------------------------------------------------------------
+    characterInfo += "\n☆ Lv: " + level + "\n☆ exp: " + experiencePoints 
+                    + "\nDeath Saves\n Successes: ";
+    for (int count1 = 0; count1 < 3; count1++) {
+      if (count1 < deathSaveSuccess) {
+        characterInfo += " 🗸";
+      } else {
+        characterInfo += " O";
+      }
+    }
+    characterInfo += "\n  Failures: ";
+    for (int count2 = 0; count2 < 3; count2++) {
+      if (count2 < deathSaveFailure) {
+        characterInfo += " X";
+      } else {
+        characterInfo += " O";
+      }
+    }
+    return characterInfo + "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-";
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * Making an attack roll.
    */
   public int makeAttackRoll(String property1, String property2) {
-    criticalHit = false;
+    // The Setup --------------------------------------------------------------
+    // Reseting roll status.
     String rollStatus = "";
-    // Checking if the player has any exhaustion first.
+    // Setting it to disadvantage if they have exhaustion.
     if (exhaustion > 1) {
       rollStatus = "disadvantage";
     }
-
+    // Reseting critical hit.
+    criticalHit = false;
     // Making the attack roll.
     int attackRoll = rollD20(rollStatus);
-    
     // Checking for crits.
     if (attackRoll == 20) {
       criticalHit = true;
     }
-    // Weapon property effects ------------------------------------------------
-    // Two handed weapons make you unequip your shield.
+    // The Attack Roll --------------------------------------------------------
+    // Getting rid of the shield if they are using a two handed weapon.
     if (property1.equals("Two-handed")) {
       hasShieldEquiped = false;
-    // Finesse weapons use your dex mod instead of your str.
-    } else if (property1.equals("Finesse")) {
+    }
+    // Getting the value.
+    // Ranged attacks use the dex mod.
+    if (property1.equals("Finesse") || property2.equals("Ranged")) {
+      if (fightingStyle.equals("Archery") && property2.equals("Ranged")) {
+        attackRoll += 2;
+      }
       return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
              + proficiencyBonus;
-    }
-    // Finesse weapons use your dex mod instead of your str.
-    if (property2.equals("Ranged")) {
-      // Archery fighting style bonus.
-      if (fightingStyle.equals("Archery")) {
-        return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
-               + proficiencyBonus + 2;
-      } else {
-        return attackRoll + (((dexterity - dexterity % 2) - 10) / 2)
-               + proficiencyBonus;
-      }
     }
     // Normal weapons use your str mod.
     return attackRoll + (((strength - strength % 2) - 10) / 2)
            + proficiencyBonus;
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function is used to tell if the player has successfuly run away from
    * the encounter.
@@ -409,8 +414,8 @@ abstract class Character {
     // First option: Run ------------------------------------------------------
     } else if (playerChoice.equals("1")) {
       // Making a check to see if they got away.
-      if (makeCheck("Dex", "Acrobatics", "Check", rollD20(rollStatus)) > runDc)
-      {
+      if (makeCheck("Dex", "Acrobatics", "Check", rollD20(rollStatus))
+          > runDc) {
         return "Succsess";
       // Failed to get away
       } else {
@@ -458,4 +463,25 @@ abstract class Character {
       return "Invalid Input";
     }
   }
-}
+  //===========================================================================
+
+  /**
+   * This function makes death saves for the character.
+   */
+  public String makeDeathSave() {
+    if (deathSaveFailure >= 3) {
+      isDead = true;
+      return "\u001B[31m☠ " + name + " has passed away... ☠\u001B[0m";
+    } else if (deathSaveSuccess >= 3) {
+      currentHitPoints = 1;
+      return "\u001B[32m " + name + " has become stable!\u001B[0m";
+    }
+    if (rollD20("") >= 10) {
+      deathSaveSuccess++;
+      return "\u001B[32m " + name + " is holding on!\u001B[0m";
+    } else {
+      deathSaveFailure++;
+      return "\u001B[31m☠ " + name + " is in critical condition! ☠\u001B[0m";
+    }
+  }
+} 

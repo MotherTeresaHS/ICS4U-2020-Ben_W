@@ -10,7 +10,7 @@
 
 public class ChultMap {
 
-//=============================================================================
+  //===========================================================================
   // Define color constants
   private static final String ANSI_RESET  = "\u001B[0m";
   private static final String BLACK_BRIGHT = "\033[0;90m";  // BLACK
@@ -38,7 +38,7 @@ public class ChultMap {
   private static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
   private static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
   private static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
-//=============================================================================
+  //===========================================================================
   private static final int numberOfPositions = 6192;
   // Each different tiles.
   private static final String beachTile = GREEN_BRIGHT + "██" + ANSI_RESET;
@@ -64,21 +64,21 @@ public class ChultMap {
   public static int playerPosition = 1481;
   // Map list.
   public static int [] [] map = new int [numberOfPositions] [2];
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function generates the map.
    */
   public static void generateMap() {
     // Creates values for each position on map.
-    /**
-     * 0 = Type Of Space.
-     * (Beach = 0, No Undead = 1, Lesser Undead = 2, Greater Undead = 3,
-     *  Mountains = 4, Rivers = 5, Swamp = 6, Wasteland = 7, town = 8
-     * island = 9, ocean = 10.)
-     * 1 = Has The Player Explored This Space?
-     * (Explored = 0, Hasn't Explored = 1)
-     * 2 = Is it a location?
-     */
+    // 0 = Type Of Space.
+    // (Beach = 0, No Undead = 1, Lesser Undead = 2, Greater Undead = 3,
+    // Mountains = 4, Rivers = 5, Swamp = 6, Wasteland = 7, town = 8
+    // island = 9, ocean = 10.)
+    // 1 = Has The Player Explored This Space?
+    // (Explored = 0, Hasn't Explored = 1)
+    // 2 = Is it a location?
+    
     for (int listPosition = 0; listPosition < numberOfPositions;
          listPosition++) {
       // Setting if the location has been explored yet. It may be long but it
@@ -188,8 +188,7 @@ public class ChultMap {
           || (listPosition >= 4592 && listPosition <= 4597)   //Row 41.
           || (listPosition >= 4664 && listPosition <= 4668)   //Row 42.
           || (listPosition >= 4737 && listPosition <= 4740)   //Row 43.
-          || (listPosition == 4810))                           //Row 44.
-      {
+          || (listPosition == 4810)) {
         map [listPosition] [1] = 1;
       } else {
         map [listPosition] [1] = 0;
@@ -361,9 +360,7 @@ public class ChultMap {
           || (listPosition == 5754) || (listPosition == 5757)
           || (listPosition == 5758) || (listPosition == 5745)
           || (listPosition == 5828) || (listPosition == 5829) //Row 81
-          || (listPosition >= 5899 && listPosition <= 5901) //Row 82
-          )
-          {
+          || (listPosition >= 5899 && listPosition <= 5901)) {
         map [listPosition] [0] = 0;
       // Setting if the position is no undead.
       } else if ((listPosition == 690) //Row 10.
@@ -616,9 +613,7 @@ public class ChultMap {
                  || (listPosition == 5177)
                  || (listPosition >= 5239 && listPosition <= 5241) //Row 73
                  || (listPosition >= 5243 && listPosition <= 5245)
-                 || (listPosition == 5315) //Row 74
-                 )
-                 {
+                 || (listPosition == 5315)) {
         map [listPosition] [0] = 1;
       // Setting if the position is lesser undead.
       } else if ((listPosition >= 1413 && listPosition <= 1416) //Row 20
@@ -690,8 +685,7 @@ public class ChultMap {
                  || (listPosition >= 3698 && listPosition <= 3700) //Row 52
                  || (listPosition == 3702) || (listPosition == 3703)
                  || (listPosition == 3771) //Row 53
-                 || (listPosition >= 3773 && listPosition <= 3775)
-                 ){
+                 || (listPosition >= 3773 && listPosition <= 3775)) {
         map [listPosition] [0] = 2;
       // Setting if the position is greater undead.
       } else if ((listPosition >= 1558 && listPosition <= 1560) //Row 22
@@ -717,8 +711,7 @@ public class ChultMap {
                  || (listPosition >= 3553 && listPosition <= 3559) //Row 50
                  || (listPosition == 3561)
                  || (listPosition >= 3627 && listPosition <= 3630) //Row 51
-                 || (listPosition == 3701) //Row 52
-                 ){
+                 || (listPosition == 3701)) {
         map [listPosition] [0] = 3;
       // Setting if the position is a mountain.
       } else if ((listPosition == 374) //Row 1.
@@ -926,8 +919,7 @@ public class ChultMap {
                  || (listPosition == 5815) || (listPosition == 5816) //Row 81
                  || (listPosition == 5827)
                  || (listPosition >= 5887 && listPosition <= 5889) //Row 82
-                 || (listPosition >= 5959 && listPosition <= 5961) //Row 83
-                 ){
+                 || (listPosition >= 5959 && listPosition <= 5961)) {
         map [listPosition] [0] = 4;
       // Setting if the position is a river.
       } else if ((listPosition == 1555) //Row 22
@@ -980,8 +972,7 @@ public class ChultMap {
                  || (listPosition >= 5248 && listPosition <= 5250) //Row 72
                  || (listPosition >= 5252 && listPosition <= 5253)
                  || (listPosition == 5320) || (listPosition == 5323)
-                 || (listPosition >= 5391 && listPosition <= 5392)
-                 ){
+                 || (listPosition >= 5391 && listPosition <= 5392)) {
         map [listPosition] [0] = 5;
       // Setting if the position is a swamp.
       } else if ((listPosition == 2334) || (listPosition == 2336) //Row 33
@@ -1008,8 +999,7 @@ public class ChultMap {
                  || (listPosition >= 3210 && listPosition <= 3214) //Row 45
                  || (listPosition == 3280) || (listPosition == 3282) //Row 46
                  || (listPosition == 3283) || (listPosition == 3285)
-                 || (listPosition == 3352) //Row 47
-                 ){
+                 || (listPosition == 3352)) {
         map [listPosition] [0] = 6;
       // Setting if the position is a wasteland.
       } else if ((listPosition >= 4 && listPosition <= 7)
@@ -1089,8 +1079,7 @@ public class ChultMap {
                  || (listPosition == 4497) || (listPosition == 4498)
                  || (listPosition == 4564) || (listPosition == 4565) //Row 64
                  || (listPosition == 5470) || (listPosition == 5471)
-                 || (listPosition == 5543)
-                 ){
+                 || (listPosition == 5543)) {
         map [listPosition] [0] = 7;
       // Setting if the position is a town.
       } else if ((listPosition == 1125)
@@ -1102,8 +1091,7 @@ public class ChultMap {
                  || (listPosition == 2278)
                  || (listPosition == 2831)
                  || (listPosition == 3149)
-                 || (listPosition == 3550)
-                 ){
+                 || (listPosition == 3550)) {
         map [listPosition] [0] = 8;
       // Setting if the position is a island.
       } else if ((listPosition == 1379) || (listPosition == 1451)
@@ -1114,8 +1102,7 @@ public class ChultMap {
                  || (listPosition == 4923) //Row 69
                  || (listPosition == 5232)
                  || (listPosition >= 5302 && listPosition <= 5304)
-                 || (listPosition == 5676) //Row 79
-                 ){
+                 || (listPosition == 5676)) {
         map [listPosition] [0] = 9;
       // Otherwise setting it to ocean.
       } else {
@@ -1123,7 +1110,8 @@ public class ChultMap {
       }
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function displays the map.
    */
@@ -1150,42 +1138,42 @@ public class ChultMap {
       } else if (listPosition == mapStart) {
         mapAsString += ("||");
       } else if (listPosition == playerPosition) {
-         mapAsString += playerTile;
+        mapAsString += playerTile;
       // Displaying unknown tiles.
       } else if (map [listPosition] [1] == 1 && map [listPosition] [0] != 5) {
         mapAsString += unknownTile;
       // Displaying beach tiles.
-      } else if (map [listPosition] [0] == 0){
+      } else if (map [listPosition] [0] == 0) {
         mapAsString += beachTile;
       // Displaying no undead tiles.
-      } else if (map [listPosition] [0] == 1){
+      } else if (map [listPosition] [0] == 1) {
         mapAsString += noUndeadTile;
       // Displaying lesser undead tiles.
-      } else if (map [listPosition] [0] == 2){
+      } else if (map [listPosition] [0] == 2) {
         mapAsString += lesserUndeadTile;
       // Displaying greater undead tiles.
-      } else if (map [listPosition] [0] == 3){
+      } else if (map [listPosition] [0] == 3) {
         mapAsString += greaterUndeadTile;
       // Displaying mountain tiles.
-      } else if (map [listPosition] [0] == 4){
+      } else if (map [listPosition] [0] == 4) {
         mapAsString += mountainTile;
       // Displaying river tiles.
-      } else if (map [listPosition] [0] == 5){
+      } else if (map [listPosition] [0] == 5) {
         mapAsString += riverTile;
       // Displaying swamp tiles.
-      } else if (map [listPosition] [0] == 6){
+      } else if (map [listPosition] [0] == 6) {
         mapAsString += swampTile;
       // Displaying wasteland tiles.
-      } else if (map [listPosition] [0] == 7){
+      } else if (map [listPosition] [0] == 7) {
         mapAsString += wastelandTile;
       // Displaying town tiles.
-      } else if (map [listPosition] [0] == 8){
+      } else if (map [listPosition] [0] == 8) {
         mapAsString += townTile;
       // Displaying island tiles.
-      } else if (map [listPosition] [0] == 9){
+      } else if (map [listPosition] [0] == 9) {
         mapAsString += islandTile;
       // Displaying ocean tiles.
-      } else if (map [listPosition] [0] == 10){
+      } else if (map [listPosition] [0] == 10) {
         mapAsString += oceanTile;
       }
     }
@@ -1194,7 +1182,45 @@ public class ChultMap {
                     + "==============================================██");
     return mapAsString;
   }
-//=============================================================================
+  //===========================================================================
+
+  /**
+   * This function returns the biome the player is in..
+   */
+  public static String getBiome() {
+    // Returning beach.
+    if (map [playerPosition] [0] == 0) {
+      return "Beach";
+    // Returning no undead.
+    } else if (map [playerPosition] [0] == 1) {
+      return "Jungle (No Undead)";
+    // Returning lesser undead.
+    } else if (map [playerPosition] [0] == 2) {
+      return "Jungle (Lesser Undead)";
+    // Returning greater undead.
+    } else if (map [playerPosition] [0] == 3) {
+      return "Jungle (Greater Undead)";
+    // Returning mountain.
+    } else if (map [playerPosition] [0] == 4) {
+      return "Mountains";
+    // Returning river.
+    } else if (map [playerPosition] [0] == 5) {
+      return "River";
+    // Returning swamp.
+    } else if (map [playerPosition] [0] == 6) {
+      return "Swamp";
+    // Returning wasteland.
+    } else if (map [playerPosition] [0] == 7) {
+      return "Wasteland";
+    // Returning town.
+    } else if (map [playerPosition] [0] == 8) {
+      return "Settlement";
+    }
+    return "???";
+  }
+  
+  //===========================================================================
+
   /**
    * This function determines if the player is lost.
    */
@@ -1239,14 +1265,15 @@ public class ChultMap {
       if (map[playerPosition + 1] [0] != 10
           && map[playerPosition + 1] [0] != 9
           && map[playerPosition + 1] [0] != 5) {
-         return direction;
+        return direction;
       } else {
         return isPlayerLost("1", 20);
       }
     }
     return (originalDirection);
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This function moves the player's location.
    */
@@ -1296,12 +1323,13 @@ public class ChultMap {
       return (TEXT_RED + "Invalid Direction" + ANSI_RESET);
     }
   }
-//=============================================================================
+  //===========================================================================
+
   /**
    * This determins if there's an encounter.
    */
   public static String rollEncounter(int encounterRoll, int whichEncounter) {
-    if (encounterRoll >= 0) {
+    if (encounterRoll >= 16) {
       // Beach encounters: ----------------------------------------------------
       if (map [playerPosition] [0] == 0) {
         if (whichEncounter >= 1 && whichEncounter <= 7) {
@@ -1558,13 +1586,13 @@ public class ChultMap {
           return "Rare Plant";
         } else if (whichEncounter == 46) {
           return "Red Wizard";
-        } else if (whichEncounter == 47 ||whichEncounter == 48) {
+        } else if (whichEncounter == 47 || whichEncounter == 48) {
           return "Constrictor Snake";
         } else if (whichEncounter == 49) {
           return "Giant Constrictor Snake";
         } else if (whichEncounter == 50) {
           return "Giant Poisonous Snake";
-        } else if (whichEncounter == 51 ||whichEncounter == 52) {
+        } else if (whichEncounter == 51 || whichEncounter == 52) {
           return "Spider";
         } else if (whichEncounter >= 53 && whichEncounter <= 55) {
           return "Statue of Ubtao";
